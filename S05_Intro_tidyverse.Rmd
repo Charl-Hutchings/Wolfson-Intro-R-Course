@@ -1,0 +1,414 @@
+---
+title: "Lesson 5: An introduction to they tidyverse"
+output: 
+  html_document:
+    toc: FALSE
+---
+
+<style type="text/css">
+
+body, td {
+   font-size: 18px;
+}
+code.r{
+  font-size: 14px;
+}
+pre {
+  font-size: 14px
+}
+</style>
+
+*This is the course handbook for WolfWorks: An introduction to R.*
+
+***
+
+Objectives: 
+
+1. Appreciate the benefits of working within the `tidyverse`
+2. Understand the differences and similarities between `data.frame` and `tibble` structures
+3. Apply the pipe (`%>%`) function to simplify the consecutive use of multiple commands
+4. Use key functions to manipulate data within the`tidyverse` - `select()`, `filter()`, `mutate()`, `pull()`, `group_by()` and `summarise()`
+
+
+***
+
+
+## Installing and loading packages with additional functionality
+
+Everything we have done so far has utilised **Base-R**, that is the basic software
+which is automatically included when you download R. Base packages are installed
+and loaded by default and provide all of the basic functions required to allow 
+R to function. 
+
+In addition to our Base-R packages, there are thousands of other R packages which
+we can make use of to improve our data analysis and facilitate extra functions.
+To use a package which is not part of Base-R, we first need to install the 
+package using `install.packages` (a Base-R function). This only needs to be done
+once (until you update your R or RStudio). 
+
+Let's install the `tidyverse` package.
+
+
+```{r, eval = FALSE}
+# install the tidyverse package
+install.packages("tidyverse")
+```
+
+
+When you install a package R will also install all other packages on which the 
+package depends, termed `package dependencies`. This is because many functions 
+rely on the internal use of other functions to run correctly. 
+
+Once a package has been installed we need to load it into the current RStudio
+session so that we can use it. To load a package we use the Base-R `library`
+function. We cannot use the functions within a package until it is both installed
+and loaded. Whilst the installation only needs to be done once (until updates), 
+we have to load the package every time we start a new RStudio session (i.e.,
+when we close RStudio and then re-open it). Let's load the `tidyverse` package 
+that we have installed.
+
+
+```{r}
+library("tidyverse")
+```
+
+
+***
+
+
+## Introduction to the tidyverse 
+
+The `tidyverse` is an umbrella package, that is to say that it comprises of
+many useful packages that are all designed to complement each other and work
+together. The `tidyverse` packages include `ggplot2`, `tidyr`, `dplyr` and 
+`tibble`, among many others. We will make use of several of these during the
+remainder of the workshop. 
+
+All packages that are part of the [tidyverse](https://www.tidyverse.org) were 
+designed with the same philosophy, coding grammar and data structures. The
+primary aim, as you can probably guess from the name, is to promote tidy data
+and tidy data analysis.
+<br>
+<br>
+
+#### The `tibble` structure vs. Base-R `data.frame`
+
+In the previous lesson we used the `data.frame` structure within Base-R to 
+store our data. A `tibble` is essentially an improved version of a `data.frame`
+which is compatible with all packages and functions in the `tidyverse`.
+
+We can load our data directly into a `tibble` using the `read_csv` function
+(not the `read.csv` function which would give us a Base-R `data.frame`). 
+Alternatively, if we already had a `data.frame` we could convert this into a
+`tibble` using `as_tibble()`.
+
+
+```{r}
+## Load data into R as a tibble
+rna_tbl <- read_csv(file = "raw_data/rnaseq_data.csv")
+```
+
+```{r, result = "hide"}
+## Look at the structure of our tibble
+str(rna_tbl)
+```
+
+
+Our tibble is still a `data.frame` but it also has some additional classes (`tbl_df`
+and `tbl`). These are the classes `tibble` inherits from, which in simple terms 
+means that `tibble` is a `data.frame` with a few modifications. Therefore, most 
+of the functions that we previously used with `data.frame` can also be used with
+`tibble`.
+<br>
+
+**What is the difference between a `data.frame` and a `tibble`?**  
+
+If we can do everything we previously did with a `data.frame` with our `tibble`, 
+what is the point of a `tibble`? 
+
+The modifications made to a `data.frame` to generate a `tibble` have one main 
+purpose - to create a neater format of data which can be manipulated in simpler
+ways using packages and functions from the `tidyverse`. The `tibble` is a 
+`tidyverse`-compatible `data.frame`. Other than being able to use a `tibble`
+for "tidy" data processing and plotting, several other attributes of a `tibble`
+contribute to its tidyness:
+
+* Printing a `tibble` will not automatically print the entire data set, but just
+the first 10 rows and the number of columns that fit on the screen
+* The data type contained in each column is specified underneath the column
+name - this reduces the need for us to use `class()` or `str()`
+* `tibbles` are stricter and produce more warnings e.g., if you try to subset
+based on a column that does not exist
+<br>
+<br>
+
+#### The pipe operator
+One of the most influential additions that we gain by using the `tidyverse` is 
+the pipe operator (`%>%` or `|>`) from the `magrittr` package (loaded as one of
+the `tidyverse`s packages).
+
+The function of a pipe is to pass the output of one function (on its left) 
+directly as an input to another function (on its right). This reduces the need
+for difficult-to-read nested functions. For example, if I wanted to take the
+mean of all expression values in our data set and round this value to two 
+significant figures:
+
+
+```{r}
+## In base-R using nested functions
+signif(mean(rna_tbl$expression, na.rm = TRUE), digits = 2)
+
+## In the tidyverse using the pipe operator
+rna_tbl %>%
+  pull(expression) %>%
+  mean(na.rm = TRUE) %>%
+  signif(digits = 2)
+```
+
+
+It is much easier to see step-by-step what the code is doing when we use the 
+pipe operator. We have also introduced a new function - `pull()`. This is a 
+function that is commonly used in the `tidyverse` to extract a specific column
+as a vector. We will see more of this soon. 
+
+
+***
+
+
+## Data manipulation using `dplyr` and `tidyr`
+
+Both `dplyr` and `tidyr` are two of the packages installed and loaded within the
+`tidyverse` umbrella package. The most common functions within the `dplyr`
+package are: 
+
+* `select()` = select a subset of columns - output is a `tibble`
+* `filter()` = filter for a subset of rows (based on their values in a column) - output is a `tibble`
+* `mutate()` = create new columns that are functions of existing columns - output is a `tibble`
+* `pull()` = extract values from a column as a `vector`
+* `group_by()` = groups data based on a key (e.g., a factor)
+* `summarise()` = creates summary statistics on grouped data
+<br>
+<br>
+
+#### Selecting columns and filtering rows - `select()` and `filter()`
+
+To select only the columns that we're interested in we can make use of the 
+`select()` function. This can be particularly important when working with a
+`tibble` that is very large since we have already discovered that printing a 
+`tibble` will only display the number of columns that fit on our screen - we 
+want to make sure that these are the columns we are interested in.
+
+Using the `$` operator is quite convenient for selecting a single column and
+extracting the values as a vector. Selecting several columns using the `[]`
+subsetting operator is a bit more cumbersome. 
+
+
+```{r}
+## Subsetting columns based on []
+rna_tbl[, c("gene", "expression", "age", "sex")]
+
+## Subsetting columns using select()
+rna_tbl %>%
+  select(gene, expression, age, sex)
+```
+
+
+We can also use the "-" sign to select all columns except for those that we are
+not interested in.
+
+
+```{r, results = "hide"}
+rna_tbl %>%
+  select(-gene, -expression)
+```
+<br>
+
+**Question:**
+Take a look at the above code. What else differs when referring to columns in 
+the `tidyverse`?
+
+
+Another thing that we previously used the `[]` for was conditional subsetting of
+rows. Again, the `dplyr` package contains a convenient and tidy function for
+doing this - `filter()`.
+
+
+```{r, results = "hide"}
+## Conditionally subsetting rows based on []
+rna_tbl[rna_tbl$gene == "Exd2", ]
+
+## Conditionally subsetting rows using filter()
+rna_tbl %>%
+  filter(gene == "Exd2")
+```
+
+
+The most convenient thing about using the `select()` and `filter()` functions is
+that their output (the subsetted data) can be piped straight into another 
+function. Using the base-R `[]` subsetting we would either have to assign the 
+subsetted data to a new object and then start a new command with this object, or
+create a difficult-to-read nested command.
+<br>
+
+**Question:** 
+If I wanted to use both `select()` and `filter()` to get a subset of rows and
+columns, which order would be the best to do this in?
+<br>
+<br>
+
+**What is the difference between `pull()` and `select()`**
+
+The `pull()` function returns a single column as a vector; the `select()` function
+returns one or more columns as a data frame. This means that we can pipe the 
+output of `pull()` straight into a function expecting numbers. 
+
+
+```{r}
+## Using pull to return a numeric vector
+rna_tbl %>%
+  pull(expression) %>%
+  median(na.rm = TRUE)
+```
+
+```{r, eval = FALSE}
+## Using select does not return a numeric vector 
+rna_tbl %>%
+  select(expression) %>%
+  median(na.rm = TRUE)
+```
+<br>
+<br>
+
+#### Creating new columns with `mutate()`
+
+It is very common to want to modify a column or create a new column based on 
+existing columns. For example, we might want to convert units (multiply all
+values in a column by a conversion factor) or find the ratio between two columns.
+For this we can use the `mutate()` function.
+
+Let's create a new column in our data which stores time in hours rather than days.
+
+
+```{r}
+## Use mutate() to create new columns
+rna_tbl %>%
+  mutate(time_hrs = time * 24) %>%
+  select(time, time_hrs)
+```
+
+When the `mutate()` function is executed, each new column is generated one-by-one.
+This means that we can actually create a second column based on our new column, 
+all within a single command.
+
+
+```{r}
+## Use mutate to create new columns
+rna_tbl %>%
+  mutate(time_hrs = time * 24, 
+         time_mins = time_hrs * 60) %>%
+  select(time, time_hrs, time_mins)
+```
+<br>
+<br>
+
+#### Split-apply-combine data analysis using `group_by()` and `summarise()`
+
+Most data contains information about groups, and these are often defined by 
+`factors`. For example, in our data we have males and females, time points 0, 4 
+and 8 days and all of our genes. In some cases we may want to do analysis on a 
+per-group basis. Hence, we **split** the data into groups, **apply** some 
+analysis to each group, and then **combine** the results. This process is made 
+easy by the `group_by()` function.
+
+
+```{r}
+rna_tbl %>%
+  group_by(sex) 
+```
+
+
+We can see at the top of our tibble that we have two groups based on the factor
+`sex`. We could similarly group by time point.
+
+
+```{r}
+rna_tbl %>%
+  group_by(time)
+```
+
+
+Now we have three groups based on the `time` column.
+
+Once we have grouped our data, subsequent operations will be carried out on a 
+per-group basis. This is facilitated by the `summarise()` function. Let's try
+to find the mean expression across all genes at each time point.
+
+
+```{r}
+rna_tbl %>%
+  group_by(time) %>%
+  summarise(mean_expression = mean(expression, na.rm = TRUE))
+```
+
+
+We can also group by more than one factor at once. For example, if we wanted
+the mean expression value for males and females at each timepoint.
+
+
+```{r}
+rna_tbl %>% 
+  group_by(sex, time) %>%
+  summarise(mean_expression = mean(expression, na.rm = TRUE))
+```
+
+
+Similarly, once the data is grouped, we can also summarise several variables at 
+the same time.
+
+
+```{r}
+rna_tbl %>%
+  group_by(sex, time) %>%
+  summarise(mean_expression = mean(expression, na.rm = TRUE),
+            med_expression = median(expression, na.rm = TRUE))
+```
+<br>
+<br>
+
+**Challenge: Using the `tidyverse` for data manipulation and analysis**
+
+Use the `dplyr()` functions that we have discussed to answer the following
+questions:
+
+1. How many protein_coding genes were measured in this study?
+2. What is the mean expression of 'lncRNA' and 'miRNA' genes for males and females at 8-days post-treatment?
+3. Identify genes associated with the "abnormal DNA methylation" phenotype, and calculate their mean expression (in log) at time 0-, 4- and 8-days post-treatment.
+<br>
+
+<details>  
+<summary>Solution</summary> 
+<br>
+
+```{r}
+rna_tbl %>%
+  group_by(gene_biotype) %>%
+  summarise(number = length(time))
+
+## Can be done easily with count()
+rna_tbl %>%
+  count(gene_biotype)
+
+rna_tbl %>%
+  filter(gene_biotype == "lncRNA" | gene_biotype == "miRNA") %>%
+  group_by(sex, gene_biotype) %>%
+  summarise(mean_exp = mean(expression, na.rm = TRUE))
+
+rna_tbl %>%
+  filter(phenotype_description == "abnormal DNA methylation") %>%
+  group_by(gene, time) %>%
+  summarise(mean_exp = mean(expression, na.rm = TRUE)) %>%
+  mutate(log_mean_exp = log(mean_exp))
+```
+
+</details>
+     

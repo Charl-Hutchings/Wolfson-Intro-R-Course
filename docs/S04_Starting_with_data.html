@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Lesson 4: Starting with your own data</title>
+
+<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  { color: #cccccc; background-color: #303030; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ffcfaf; } /* Alert */
+code span.an { color: #7f9f7f; font-weight: bold; } /* Annotation */
+code span.at { } /* Attribute */
+code span.bn { color: #dca3a3; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #f0dfaf; } /* ControlFlow */
+code span.ch { color: #dca3a3; } /* Char */
+code span.cn { color: #dca3a3; font-weight: bold; } /* Constant */
+code span.co { color: #7f9f7f; } /* Comment */
+code span.cv { color: #7f9f7f; font-weight: bold; } /* CommentVar */
+code span.do { color: #7f9f7f; } /* Documentation */
+code span.dt { color: #dfdfbf; } /* DataType */
+code span.dv { color: #dcdccc; } /* DecVal */
+code span.er { color: #c3bf9f; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #c0bed1; } /* Float */
+code span.fu { color: #efef8f; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #7f9f7f; font-weight: bold; } /* Information */
+code span.kw { color: #f0dfaf; } /* Keyword */
+code span.op { color: #f0efd0; } /* Operator */
+code span.ot { color: #efef8f; } /* Other */
+code span.pp { color: #ffcfaf; font-weight: bold; } /* Preprocessor */
+code span.sc { color: #dca3a3; } /* SpecialChar */
+code span.ss { color: #cc9393; } /* SpecialString */
+code span.st { color: #cc9393; } /* String */
+code span.va { } /* Variable */
+code span.vs { color: #cc9393; } /* VerbatimString */
+code span.wa { color: #7f9f7f; font-weight: bold; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">WolfWorks: An Introduction to R</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Setup
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="./S00_background.html">Course Outline</a>
+    </li>
+    <li>
+      <a href="./S00_setup.html">Course Setup</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Lessons
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="./S01_R_and_RStudio.html">R and RStudio</a>
+    </li>
+    <li>
+      <a href="./S02_Objects_in_R.html">Objects in R</a>
+    </li>
+    <li>
+      <a href="./S03_Data_structures_in_R.html">Data structures in R</a>
+    </li>
+    <li>
+      <a href="./S04_Starting_with_data.html">Starting with data</a>
+    </li>
+    <li>
+      <a href="./S05_Intro_tidyverse.html">Intro to the tidyverse</a>
+    </li>
+    <li>
+      <a href="./S06_Data_visualisation_ggplot.html">Data visualisation with ggplot2</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="./contact.html">Contact</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/Charl-Hutchings/RIntro">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Lesson 4: Starting with your own data</h1>
+
+</div>
+
+
+<style type="text/css">
+
+body, td {
+   font-size: 18px;
+}
+code.r{
+  font-size: 14px;
+}
+pre {
+  font-size: 14px
+}
+</style>
+<p><em>This is the course handbook for WolfWorks: An introduction to R.</em></p>
+<hr />
+<p>Objectives:</p>
+<ol style="list-style-type: decimal">
+<li>Upload data from a <code>.csv</code> file into a <code>data.frame</code> in R</li>
+<li>Manipulate a <code>data.frame</code> by re-naming columns and rows and converting columns between data types</li>
+<li>Be aware of different approaches to dealing with missing data</li>
+<li>Export a <code>data.frame</code> from R into a <code>.csv</code> file</li>
+</ol>
+<hr />
+<div id="the-use-case-data" class="section level2">
+<h2>The use-case data</h2>
+<p>For the remainder of this workshop we will be looking at real-life data from <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5544260/">Blackmore <em>et al</em>. (2017)</a>, <em>The effect of upper-respiratory infection on transcriptomic changes in the CNS</em>. In this study, mice were treated with either (i) Influenza A virus or (ii) control saline solution. At 0, 4 and 8 days post-treatment, samples were taken from the cerebellum (brain) and spinal cord tissues and the gene expression in these tissues was measured.</p>
+<p>The dataset is stored as a <code>.csv</code> file. Each row holds information for a single RNA expression measurement and the columns include various attributes associated with this measurement. Examples include:</p>
+<table>
+<caption>Description of data stored in the first 11 columns of our use-case data</caption>
+<colgroup>
+<col width="11%" />
+<col width="88%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Column</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">gene</td>
+<td align="left">The name of the gene that was measured</td>
+</tr>
+<tr class="even">
+<td align="left">sample</td>
+<td align="left">The name of the sample that the gene expression was measured in</td>
+</tr>
+<tr class="odd">
+<td align="left">expression</td>
+<td align="left">The quantitative value of the gene expression</td>
+</tr>
+<tr class="even">
+<td align="left">organism</td>
+<td align="left">The organism/species - here all data were from mice</td>
+</tr>
+<tr class="odd">
+<td align="left">age</td>
+<td align="left">The age of the mouse - here all mice were 8 weeks</td>
+</tr>
+<tr class="even">
+<td align="left">sex</td>
+<td align="left">The sex of the mouse</td>
+</tr>
+<tr class="odd">
+<td align="left">infection</td>
+<td align="left">The infection state i.e., Influenze A or not infected (control)</td>
+</tr>
+<tr class="even">
+<td align="left">strain</td>
+<td align="left">The strain of mouse</td>
+</tr>
+<tr class="odd">
+<td align="left">time</td>
+<td align="left">The duration of infection (in days)</td>
+</tr>
+<tr class="even">
+<td align="left">tissue</td>
+<td align="left">The tissue that gene expression was measured in - either cerebellum or spinal cord</td>
+</tr>
+<tr class="odd">
+<td align="left">mouse</td>
+<td align="left">The mouse unique identifier</td>
+</tr>
+</tbody>
+</table>
+<hr />
+</div>
+<div id="downloading-and-importing-data" class="section level2">
+<h2>Downloading and importing data</h2>
+<p>There are two ways in which you can download the data required for this workshop. Firstly, we can use the <code>download.file()</code> function and pass it two arguments - the <code>url</code> where the data is stored and the <code>destfile</code> where we want to save it on our local system. Remember, when giving a file path to <code>destfile</code>, this can be absolute or relative. If you’re using a relative filepath, make sure you know where your working directory is (since this is where the path is relative to).</p>
+<p>The second way to download this file would be to manually visit the <code>url</code> and save it into our desired file from there. Since we can do it all within R, let’s do it the first way.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Download data file into desired local destination</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">download.file</span>(<span class="at">url =</span> <span class="st">&quot;https://github.com/carpentries-incubator/bioc-intro/raw/main/episodes/data/rnaseq.csv&quot;</span>,</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">destfile =</span> <span class="st">&quot;raw_data/rnaseq_data.csv&quot;</span>)</span></code></pre></div>
+<p><br></p>
+<p>Now that we have the file stored on our local system we can load the data into R. To do this we use the <code>read.csv()</code> function and pass the relative path to our file. Remember to assign the data to an object, here called <code>rna_data</code>. <br></p>
+<ul>
+<li><code>read.csv()</code> reads data from a comma-separated (CSV) file into a data frame</li>
+<li><code>read.delim()</code> reads data from a delimited files (default is tab-delimited) into a data frame <br></li>
+</ul>
+<p>The <code>read.csv2()</code> and <code>read.delim2()</code> functions are designed for countries that use “,” as decimal places rather than separators. Here, the separators are typically “;”.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Load data into R as a data frame</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>rna_data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">file =</span> <span class="st">&quot;raw_data/rnaseq_data.csv&quot;</span>)</span></code></pre></div>
+<p>As we expect, R does not give us any output from an assignment, but we should see that our data has now appeared in the RStudio environment.</p>
+<hr />
+</div>
+<div id="checking-our-understanding" class="section level2">
+<h2>Checking our understanding</h2>
+<p>To bring together everything covered in the workshop so far, please complete the three challenges below.</p>
+<p>Tips:</p>
+<ul>
+<li>Ask for help using the <code>?</code> or <code>??</code> notation</li>
+<li>Be aware of missing data (NA values)</li>
+<li>Remember the different properties of character vs. factor data types</li>
+<li>Break each challenge down - think about what data you need and in what format <br> <br></li>
+</ul>
+<p><strong>Challenge: Basic plotting</strong><br />
+Re-create this plot showing the expression of Ubfd1 at 8-days post-treatment in male and female mice. Think about which data is displayed on the graph - this is the data you need from our data frame. Explore the use of the <code>plot()</code> function.</p>
+<p><img src="images/example_graph_challenge.png" width="70%" style="display: block; margin: auto;" /> <br> <br></p>
+<details>
+<summary>
+Solution
+</summary>
+<p><br></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>plotting_data <span class="ot">&lt;-</span> rna_data[rna_data<span class="sc">$</span>gene <span class="sc">==</span> <span class="st">&quot;Ubfd1&quot;</span> <span class="sc">&amp;</span> rna_data<span class="sc">$</span>time <span class="sc">==</span> <span class="dv">8</span>, ] <span class="co">#Subset relevant data</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>plotting_data<span class="sc">$</span>sex <span class="ot">&lt;-</span> <span class="fu">factor</span>(plotting_data<span class="sc">$</span>sex, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;Male&quot;</span>, <span class="st">&quot;Female&quot;</span>)) <span class="co">#Convert sex to a factor and re-level</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(expression <span class="sc">~</span> sex, <span class="at">data =</span> plotting_data, </span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&quot;Expression of Ubfd1 at 8-days post-treatment&quot;</span>,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">&quot;Expression of Ubfd1&quot;</span>,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;Sex&quot;</span>,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&quot;lightgreen&quot;</span>, <span class="st">&quot;orange&quot;</span>))</span></code></pre></div>
+<p><img src="S04_Starting_with_data_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+</details>
+<p><br></p>
+<p><strong>Challenge: Basic statistics</strong><br />
+Using the <code>rna_data</code> data set, test whether the <code>expression</code> of Fbxl22 is correlated with <code>time</code>. Explore the use of the <code>cor.test</code> function.</p>
+<ul>
+<li>What is the estimated correlation coefficient?</li>
+<li>What is the p-value?</li>
+<li>What is the correlation coefficient confidence interval?</li>
+</ul>
+<details>
+<summary>
+Solution
+</summary>
+<p><br></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>statistics_data <span class="ot">&lt;-</span> rna_data[rna_data<span class="sc">$</span>gene <span class="sc">==</span> <span class="st">&quot;Fbxl22&quot;</span>, ]  <span class="co">#Subset relevant data</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(<span class="at">x =</span> statistics_data<span class="sc">$</span>expression, <span class="at">y =</span> statistics_data<span class="sc">$</span>time)  <span class="co">#Carry out correlation test</span></span></code></pre></div>
+<pre><code>## 
+##  Pearson&#39;s product-moment correlation
+## 
+## data:  statistics_data$expression and statistics_data$time
+## t = -8.6595, df = 20, p-value = 3.357e-08
+## alternative hypothesis: true correlation is not equal to 0
+## 95 percent confidence interval:
+##  -0.9530869 -0.7465614
+## sample estimates:
+##        cor 
+## -0.8885065</code></pre>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(expression <span class="sc">~</span> time, <span class="at">data =</span> statistics_data,                     <span class="co">#Create plot to visually verify result</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&quot;Correlation between expression of Fbxl22 and time&quot;</span>,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;Expresssion of Fbxl22&quot;</span>, </span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">&quot;Time post-treatment (days)&quot;</span>)</span></code></pre></div>
+<p><img src="S04_Starting_with_data_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+</details>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

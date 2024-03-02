@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Lesson 5: An introduction to they tidyverse</title>
+
+<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  { color: #cccccc; background-color: #303030; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ffcfaf; } /* Alert */
+code span.an { color: #7f9f7f; font-weight: bold; } /* Annotation */
+code span.at { } /* Attribute */
+code span.bn { color: #dca3a3; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #f0dfaf; } /* ControlFlow */
+code span.ch { color: #dca3a3; } /* Char */
+code span.cn { color: #dca3a3; font-weight: bold; } /* Constant */
+code span.co { color: #7f9f7f; } /* Comment */
+code span.cv { color: #7f9f7f; font-weight: bold; } /* CommentVar */
+code span.do { color: #7f9f7f; } /* Documentation */
+code span.dt { color: #dfdfbf; } /* DataType */
+code span.dv { color: #dcdccc; } /* DecVal */
+code span.er { color: #c3bf9f; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #c0bed1; } /* Float */
+code span.fu { color: #efef8f; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #7f9f7f; font-weight: bold; } /* Information */
+code span.kw { color: #f0dfaf; } /* Keyword */
+code span.op { color: #f0efd0; } /* Operator */
+code span.ot { color: #efef8f; } /* Other */
+code span.pp { color: #ffcfaf; font-weight: bold; } /* Preprocessor */
+code span.sc { color: #dca3a3; } /* SpecialChar */
+code span.ss { color: #cc9393; } /* SpecialString */
+code span.st { color: #cc9393; } /* String */
+code span.va { } /* Variable */
+code span.vs { color: #cc9393; } /* VerbatimString */
+code span.wa { color: #7f9f7f; font-weight: bold; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">WolfWorks: An Introduction to R</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Setup
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="./S00_background.html">Course Outline</a>
+    </li>
+    <li>
+      <a href="./S00_setup.html">Course Setup</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Lessons
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="./S01_R_and_RStudio.html">R and RStudio</a>
+    </li>
+    <li>
+      <a href="./S02_Objects_in_R.html">Objects in R</a>
+    </li>
+    <li>
+      <a href="./S03_Data_structures_in_R.html">Data structures in R</a>
+    </li>
+    <li>
+      <a href="./S04_Starting_with_data.html">Starting with data</a>
+    </li>
+    <li>
+      <a href="./S05_Intro_tidyverse.html">Intro to the tidyverse</a>
+    </li>
+    <li>
+      <a href="./S06_Data_visualisation_ggplot.html">Data visualisation with ggplot2</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="./contact.html">Contact</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/Charl-Hutchings/RIntro">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Lesson 5: An introduction to they tidyverse</h1>
+
+</div>
+
+
+<style type="text/css">
+
+body, td {
+   font-size: 18px;
+}
+code.r{
+  font-size: 14px;
+}
+pre {
+  font-size: 14px
+}
+</style>
+<p><em>This is the course handbook for WolfWorks: An introduction to R.</em></p>
+<hr />
+<p>Objectives:</p>
+<ol style="list-style-type: decimal">
+<li>Appreciate the benefits of working within the <code>tidyverse</code></li>
+<li>Understand the differences and similarities between <code>data.frame</code> and <code>tibble</code> structures</li>
+<li>Apply the pipe (<code>%&gt;%</code>) function to simplify the consecutive use of multiple commands</li>
+<li>Use key functions to manipulate data within the<code>tidyverse</code> - <code>select()</code>, <code>filter()</code>, <code>mutate()</code>, <code>pull()</code>, <code>group_by()</code> and <code>summarise()</code></li>
+</ol>
+<hr />
+<div id="installing-and-loading-packages-with-additional-functionality" class="section level2">
+<h2>Installing and loading packages with additional functionality</h2>
+<p>Everything we have done so far has utilised <strong>Base-R</strong>, that is the basic software which is automatically included when you download R. Base packages are installed and loaded by default and provide all of the basic functions required to allow R to function.</p>
+<p>In addition to our Base-R packages, there are thousands of other R packages which we can make use of to improve our data analysis and facilitate extra functions. To use a package which is not part of Base-R, we first need to install the package using <code>install.packages</code> (a Base-R function). This only needs to be done once (until you update your R or RStudio).</p>
+<p>Let’s install the <code>tidyverse</code> package.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># install the tidyverse package</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;tidyverse&quot;</span>)</span></code></pre></div>
+<p>When you install a package R will also install all other packages on which the package depends, termed <code>package dependencies</code>. This is because many functions rely on the internal use of other functions to run correctly.</p>
+<p>Once a package has been installed we need to load it into the current RStudio session so that we can use it. To load a package we use the Base-R <code>library</code> function. We cannot use the functions within a package until it is both installed and loaded. Whilst the installation only needs to be done once (until updates), we have to load the package every time we start a new RStudio session (i.e., when we close RStudio and then re-open it). Let’s load the <code>tidyverse</code> package that we have installed.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;tidyverse&quot;</span>)</span></code></pre></div>
+<hr />
+</div>
+<div id="introduction-to-the-tidyverse" class="section level2">
+<h2>Introduction to the tidyverse</h2>
+<p>The <code>tidyverse</code> is an umbrella package, that is to say that it comprises of many useful packages that are all designed to complement each other and work together. The <code>tidyverse</code> packages include <code>ggplot2</code>, <code>tidyr</code>, <code>dplyr</code> and <code>tibble</code>, among many others. We will make use of several of these during the remainder of the workshop.</p>
+<p>All packages that are part of the <a href="https://www.tidyverse.org">tidyverse</a> were designed with the same philosophy, coding grammar and data structures. The primary aim, as you can probably guess from the name, is to promote tidy data and tidy data analysis. <br> <br></p>
+<div id="the-tibble-structure-vs.-base-r-data.frame" class="section level4">
+<h4>The <code>tibble</code> structure vs. Base-R <code>data.frame</code></h4>
+<p>In the previous lesson we used the <code>data.frame</code> structure within Base-R to store our data. A <code>tibble</code> is essentially an improved version of a <code>data.frame</code> which is compatible with all packages and functions in the <code>tidyverse</code>.</p>
+<p>We can load our data directly into a <code>tibble</code> using the <code>read_csv</code> function (not the <code>read.csv</code> function which would give us a Base-R <code>data.frame</code>). Alternatively, if we already had a <code>data.frame</code> we could convert this into a <code>tibble</code> using <code>as_tibble()</code>.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Load data into R as a tibble</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>rna_tbl <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="at">file =</span> <span class="st">&quot;raw_data/rnaseq_data.csv&quot;</span>)</span></code></pre></div>
+<pre><code>## Rows: 32428 Columns: 19
+## ── Column specification ────────────────────────────────────────────────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr (14): gene, sample, organism, sex, infection, strain, tissue, product, ensembl_gene_id, external_synonym, chromosome...
+## dbl  (5): expression, age, time, mouse, ENTREZID
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Look at the structure of our tibble</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(rna_tbl)</span></code></pre></div>
+<pre><code>## spc_tbl_ [32,428 × 19] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
+##  $ gene                                 : chr [1:32428] &quot;Asl&quot; &quot;Apod&quot; &quot;Cyp2d22&quot; &quot;Klk6&quot; ...
+##  $ sample                               : chr [1:32428] &quot;GSM2545336&quot; &quot;GSM2545336&quot; &quot;GSM2545336&quot; &quot;GSM2545336&quot; ...
+##  $ expression                           : num [1:32428] 1170 36194 4060 287 85 ...
+##  $ organism                             : chr [1:32428] &quot;Mus musculus&quot; &quot;Mus musculus&quot; &quot;Mus musculus&quot; &quot;Mus musculus&quot; ...
+##  $ age                                  : num [1:32428] 8 8 8 8 8 8 8 8 8 8 ...
+##  $ sex                                  : chr [1:32428] &quot;Female&quot; &quot;Female&quot; &quot;Female&quot; &quot;Female&quot; ...
+##  $ infection                            : chr [1:32428] &quot;InfluenzaA&quot; &quot;InfluenzaA&quot; &quot;InfluenzaA&quot; &quot;InfluenzaA&quot; ...
+##  $ strain                               : chr [1:32428] &quot;C57BL/6&quot; &quot;C57BL/6&quot; &quot;C57BL/6&quot; &quot;C57BL/6&quot; ...
+##  $ time                                 : num [1:32428] 8 8 8 8 8 8 8 8 8 8 ...
+##  $ tissue                               : chr [1:32428] &quot;Cerebellum&quot; &quot;Cerebellum&quot; &quot;Cerebellum&quot; &quot;Cerebellum&quot; ...
+##  $ mouse                                : num [1:32428] 14 14 14 14 14 14 14 14 14 14 ...
+##  $ ENTREZID                             : num [1:32428] 109900 11815 56448 19144 80891 ...
+##  $ product                              : chr [1:32428] &quot;argininosuccinate lyase, transcript variant X1&quot; &quot;apolipoprotein D, transcript variant 3&quot; &quot;cytochrome P450, family 2, subfamily d, polypeptide 22, transcript variant 2&quot; &quot;kallikrein related-peptidase 6, transcript variant 2&quot; ...
+##  $ ensembl_gene_id                      : chr [1:32428] &quot;ENSMUSG00000025533&quot; &quot;ENSMUSG00000022548&quot; &quot;ENSMUSG00000061740&quot; &quot;ENSMUSG00000050063&quot; ...
+##  $ external_synonym                     : chr [1:32428] &quot;2510006M18Rik&quot; NA &quot;2D22&quot; &quot;Bssp&quot; ...
+##  $ chromosome_name                      : chr [1:32428] &quot;5&quot; &quot;16&quot; &quot;15&quot; &quot;7&quot; ...
+##  $ gene_biotype                         : chr [1:32428] &quot;protein_coding&quot; &quot;protein_coding&quot; &quot;protein_coding&quot; &quot;protein_coding&quot; ...
+##  $ phenotype_description                : chr [1:32428] &quot;abnormal circulating amino acid level&quot; &quot;abnormal lipid homeostasis&quot; &quot;abnormal skin morphology&quot; &quot;abnormal cytokine level&quot; ...
+##  $ hsapiens_homolog_associated_gene_name: chr [1:32428] &quot;ASL&quot; &quot;APOD&quot; &quot;CYP2D6&quot; &quot;KLK6&quot; ...
+##  - attr(*, &quot;spec&quot;)=
+##   .. cols(
+##   ..   gene = col_character(),
+##   ..   sample = col_character(),
+##   ..   expression = col_double(),
+##   ..   organism = col_character(),
+##   ..   age = col_double(),
+##   ..   sex = col_character(),
+##   ..   infection = col_character(),
+##   ..   strain = col_character(),
+##   ..   time = col_double(),
+##   ..   tissue = col_character(),
+##   ..   mouse = col_double(),
+##   ..   ENTREZID = col_double(),
+##   ..   product = col_character(),
+##   ..   ensembl_gene_id = col_character(),
+##   ..   external_synonym = col_character(),
+##   ..   chromosome_name = col_character(),
+##   ..   gene_biotype = col_character(),
+##   ..   phenotype_description = col_character(),
+##   ..   hsapiens_homolog_associated_gene_name = col_character()
+##   .. )
+##  - attr(*, &quot;problems&quot;)=&lt;externalptr&gt;</code></pre>
+<p>Our tibble is still a <code>data.frame</code> but it also has some additional classes (<code>tbl_df</code> and <code>tbl</code>). These are the classes <code>tibble</code> inherits from, which in simple terms means that <code>tibble</code> is a <code>data.frame</code> with a few modifications. Therefore, most of the functions that we previously used with <code>data.frame</code> can also be used with <code>tibble</code>. <br></p>
+<p><strong>What is the difference between a <code>data.frame</code> and a <code>tibble</code>?</strong></p>
+<p>If we can do everything we previously did with a <code>data.frame</code> with our <code>tibble</code>, what is the point of a <code>tibble</code>?</p>
+<p>The modifications made to a <code>data.frame</code> to generate a <code>tibble</code> have one main purpose - to create a neater format of data which can be manipulated in simpler ways using packages and functions from the <code>tidyverse</code>. The <code>tibble</code> is a <code>tidyverse</code>-compatible <code>data.frame</code>. Other than being able to use a <code>tibble</code> for “tidy” data processing and plotting, several other attributes of a <code>tibble</code> contribute to its tidyness:</p>
+<ul>
+<li>Printing a <code>tibble</code> will not automatically print the entire data set, but just the first 10 rows and the number of columns that fit on the screen</li>
+<li>The data type contained in each column is specified underneath the column name - this reduces the need for us to use <code>class()</code> or <code>str()</code></li>
+<li><code>tibbles</code> are stricter and produce more warnings e.g., if you try to subset based on a column that does not exist <br> <br></li>
+</ul>
+</div>
+<div id="the-pipe-operator" class="section level4">
+<h4>The pipe operator</h4>
+<p>One of the most influential additions that we gain by using the <code>tidyverse</code> is the pipe operator (<code>%&gt;%</code> or <code>|&gt;</code>) from the <code>magrittr</code> package (loaded as one of the <code>tidyverse</code>s packages).</p>
+<p>The function of a pipe is to pass the output of one function (on its left) directly as an input to another function (on its right). This reduces the need for difficult-to-read nested functions. For example, if I wanted to take the mean of all expression values in our data set and round this value to two significant figures:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="do">## In base-R using nested functions</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">signif</span>(<span class="fu">mean</span>(rna_tbl<span class="sc">$</span>expression, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## [1] 1900</code></pre>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="do">## In the tidyverse using the pipe operator</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>rna_tbl <span class="sc">%&gt;%</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(expression) <span class="sc">%&gt;%</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean</span>(<span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">signif</span>(<span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## [1] 1900</code></pre>
+<p>It is much easier to see step-by-step what the code is doing when we use the pipe operator. We have also introduced a new function - <code>pull()</code>. This is a function that is commonly used in the <code>tidyverse</code> to extract a specific column as a vector. We will see more of this soon.</p>
+<hr />
+</div>
+</div>
+<div id="data-manipulation-using-dplyr-and-tidyr" class="section level2">
+<h2>Data manipulation using <code>dplyr</code> and <code>tidyr</code></h2>
+<p>Both <code>dplyr</code> and <code>tidyr</code> are two of the packages installed and loaded within the <code>tidyverse</code> umbrella package. The most common functions within the <code>dplyr</code> package are:</p>
+<ul>
+<li><code>select()</code> = select a subset of columns - output is a <code>tibble</code></li>
+<li><code>filter()</code> = filter for a subset of rows (based on their values in a column) - output is a <code>tibble</code></li>
+<li><code>mutate()</code> = create new columns that are functions of existing columns - output is a <code>tibble</code></li>
+<li><code>pull()</code> = extract values from a column as a <code>vector</code></li>
+<li><code>group_by()</code> = groups data based on a key (e.g., a factor)</li>
+<li><code>summarise()</code> = creates summary statistics on grouped data <br> <br></li>
+</ul>
+<div id="selecting-columns-and-filtering-rows---select-and-filter" class="section level4">
+<h4>Selecting columns and filtering rows - <code>select()</code> and <code>filter()</code></h4>
+<p>To select only the columns that we’re interested in we can make use of the <code>select()</code> function. This can be particularly important when working with a <code>tibble</code> that is very large since we have already discovered that printing a <code>tibble</code> will only display the number of columns that fit on our screen - we want to make sure that these are the columns we are interested in.</p>
+<p>Using the <code>$</code> operator is quite convenient for selecting a single column and extracting the values as a vector. Selecting several columns using the <code>[]</code> subsetting operator is a bit more cumbersome.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Subsetting columns based on []</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>rna_tbl[, <span class="fu">c</span>(<span class="st">&quot;gene&quot;</span>, <span class="st">&quot;expression&quot;</span>, <span class="st">&quot;age&quot;</span>, <span class="st">&quot;sex&quot;</span>)]</span></code></pre></div>
+<pre><code>## # A tibble: 32,428 × 4
+##    gene    expression   age sex   
+##    &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; 
+##  1 Asl           1170     8 Female
+##  2 Apod         36194     8 Female
+##  3 Cyp2d22       4060     8 Female
+##  4 Klk6           287     8 Female
+##  5 Fcrls           85     8 Female
+##  6 Slc2a4         782     8 Female
+##  7 Exd2          1619     8 Female
+##  8 Gjc2           288     8 Female
+##  9 Plp1         43217     8 Female
+## 10 Gnb4          1071     8 Female
+## # ℹ 32,418 more rows</code></pre>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Subsetting columns using select()</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>rna_tbl <span class="sc">%&gt;%</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(gene, expression, age, sex)</span></code></pre></div>
+<pre><code>## # A tibble: 32,428 × 4
+##    gene    expression   age sex   
+##    &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; 
+##  1 Asl           1170     8 Female
+##  2 Apod         36194     8 Female
+##  3 Cyp2d22       4060     8 Female
+##  4 Klk6           287     8 Female
+##  5 Fcrls           85     8 Female
+##  6 Slc2a4         782     8 Female
+##  7 Exd2          1619     8 Female
+##  8 Gjc2           288     8 Female
+##  9 Plp1         43217     8 Female
+## 10 Gnb4          1071     8 Female
+## # ℹ 32,418 more rows</code></pre>
+<p>We can also use the “-” sign to select all columns except for those that we are not interested in.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>rna_tbl <span class="sc">%&gt;%</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>gene, <span class="sc">-</span>expression)</span></code></pre></div>
+<p><br></p>
+<p><strong>Question:</strong> Take a look at the above code. What else differs when referring to columns in the <code>tidyverse</code>?</p>
+<p>Another thing that we previously used the <code>[]</code> for was conditional subsetting of rows. Again, the <code>dplyr</code> package contains a convenient and tidy function for doing this - <code>filter()</code>.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Conditionally subsetting rows based on []</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>rna_tbl[rna_tbl<span class="sc">$</span>gene <span class="sc">==</span> <span class="st">&quot;Exd2&quot;</span>, ]</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Conditionally subsetting rows using filter()</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>rna_tbl <span class="sc">%&gt;%</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(gene <span class="sc">==</span> <span class="st">&quot;Exd2&quot;</span>)</span></code></pre></div>
+<p>The most convenient thing about using the <code>select()</code> and <code>filter()</code> functions is that their output (the subsetted data) can be piped straight into another function. Using the base-R <code>[]</code> subsetting we would either have to assign the subsetted data to a new object and then start a new command with this object, or create a difficult-to-read nested command. <br></p>
+<p><strong>Question:</strong> If I wanted to use both <code>select()</code> and <code>filter()</code> to get a subset of rows and columns, which order would be the best to do this in? <br> <br></p>
+<p><strong>What is the difference between <code>pull()</code> and <code>select()</code></strong></p>
+<p>The <code>pull()</code> function returns a single column as a vector; the <code>select()</code> function returns one or more columns as a data frame. This means that we can pipe the output of <code>pull()</code> straight into a function expecting numbers.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Using pull to return a numeric vector</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>rna_tbl <span class="sc">%&gt;%</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(expression) <span class="sc">%&gt;%</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">median</span>(<span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<pre><code>## [1] 547</code></pre>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Using select does not return a numeric vector </span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>rna_tbl <span class="sc">%&gt;%</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(expression) <span class="sc">%&gt;%</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">median</span>(<span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<p><br> <br></p>
+</div>
+<div id="creating-new-columns-with-mutate" class="section level4">
+<h4>Creating new columns with <code>mutate()</code></h4>
+<p>It is very common to want to modify a column or create a new column based on existing columns. For example, we might want to convert units (multiply all values in a column by a conversion factor) or find the ratio between two columns. For this we can use the <code>mutate()</code> function.</p>
+<p>Let’s create a new column in our data which stores time in hours rather than days.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Use mutate() to create new columns</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>rna_tbl <span class="sc">%&gt;%</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">time_hrs =</span> time <span class="sc">*</span> <span class="dv">24</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(time, time_hrs)</span></code></pre></div>
+<pre><code>## # A tibble: 32,428 × 2
+##     time time_hrs
+##    &lt;dbl&gt;    &lt;dbl&gt;
+##  1     8      192
+##  2     8      192
+##  3     8      192
+##  4     8      192
+##  5     8      192
+##  6     8      192
+##  7     8      192
+##  8     8      192
+##  9     8      192
+## 10     8      192
+## # ℹ 32,418 more rows</code></pre>
+<p>When the <code>mutate()</code> function is executed, each new column is generated one-by-one. This means that we can actually create a second column based on our new column, all within a single command.</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Use mutate to create new columns</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>rna_tbl <span class="sc">%&gt;%</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">time_hrs =</span> time <span class="sc">*</span> <span class="dv">24</span>, </span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">time_mins =</span> time_hrs <span class="sc">*</span> <span class="dv">60</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(time, time_hrs, time_mins)</span></code></pre></div>
+<pre><code>## # A tibble: 32,428 × 3
+##     time time_hrs time_mins
+##    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+##  1     8      192     11520
+##  2     8      192     11520
+##  3     8      192     11520
+##  4     8      192     11520
+##  5     8      192     11520
+##  6     8      192     11520
+##  7     8      192     11520
+##  8     8      192     11520
+##  9     8      192     11520
+## 10     8      192     11520
+## # ℹ 32,418 more rows</code></pre>
+<p><br> <br></p>
+</div>
+<div id="split-apply-combine-data-analysis-using-group_by-and-summarise" class="section level4">
+<h4>Split-apply-combine data analysis using <code>group_by()</code> and <code>summarise()</code></h4>
+<p>Most data contains information about groups, and these are often defined by <code>factors</code>. For example, in our data we have males and females, time points 0, 4 and 8 days and all of our genes. In some cases we may want to do analysis on a per-group basis. Hence, we <strong>split</strong> the data into groups, <strong>apply</strong> some analysis to each group, and then <strong>combine</strong> the results. This process is made easy by the <code>group_by()</code> function.</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>rna_tbl <span class="sc">%&gt;%</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(sex) </span></code></pre></div>
+<pre><code>## # A tibble: 32,428 × 19
+## # Groups:   sex [2]
+##    gene    sample     expression organism     age sex   infection strain  time tissue mouse ENTREZID product ensembl_gene_id
+##    &lt;chr&gt;   &lt;chr&gt;           &lt;dbl&gt; &lt;chr&gt;      &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;          
+##  1 Asl     GSM2545336       1170 Mus muscu…     8 Fema… Influenz… C57BL…     8 Cereb…    14   109900 argini… ENSMUSG0000002…
+##  2 Apod    GSM2545336      36194 Mus muscu…     8 Fema… Influenz… C57BL…     8 Cereb…    14    11815 apolip… ENSMUSG0000002…
+##  3 Cyp2d22 GSM2545336       4060 Mus muscu…     8 Fema… Influenz… C57BL…     8 Cereb…    14    56448 cytoch… ENSMUSG0000006…
+##  4 Klk6    GSM2545336        287 Mus muscu…     8 Fema… Influenz… C57BL…     8 Cereb…    14    19144 kallik… ENSMUSG0000005…
+##  5 Fcrls   GSM2545336         85 Mus muscu…     8 Fema… Influenz… C57BL…     8 Cereb…    14    80891 Fc rec… ENSMUSG0000001…
+##  6 Slc2a4  GSM2545336        782 Mus muscu…     8 Fema… Influenz… C57BL…     8 Cereb…    14    20528 solute… ENSMUSG0000001…
+##  7 Exd2    GSM2545336       1619 Mus muscu…     8 Fema… Influenz… C57BL…     8 Cereb…    14    97827 exonuc… ENSMUSG0000003…
+##  8 Gjc2    GSM2545336        288 Mus muscu…     8 Fema… Influenz… C57BL…     8 Cereb…    14   118454 gap ju… ENSMUSG0000004…
+##  9 Plp1    GSM2545336      43217 Mus muscu…     8 Fema… Influenz… C57BL…     8 Cereb…    14    18823 proteo… ENSMUSG0000003…
+## 10 Gnb4    GSM2545336       1071 Mus muscu…     8 Fema… Influenz… C57BL…     8 Cereb…    14    14696 guanin… ENSMUSG0000002…
+## # ℹ 32,418 more rows
+## # ℹ 5 more variables: external_synonym &lt;chr&gt;, chromosome_name &lt;chr&gt;, gene_biotype &lt;chr&gt;, phenotype_description &lt;chr&gt;,
+## #   hsapiens_homolog_associated_gene_name &lt;chr&gt;</code></pre>
+<p>We can see at the top of our tibble that we have two groups based on the factor <code>sex</code>. We could similarly group by time point.</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>rna_tbl <span class="sc">%&gt;%</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(time)</span></code></pre></div>
+<pre><code>## # A tibble: 32,428 × 19
+## # Groups:   time [3]
+##    gene    sample     expression organism     age sex   infection strain  time tissue mouse ENTREZID product ensembl_gene_id
+##    &lt;chr&gt;   &lt;chr&gt;           &lt;dbl&gt; &lt;chr&gt;      &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;          
+##  1 Asl     GSM2545336       1170 Mus muscu…     8 Fema… Influenz… C57BL…     8 Cereb…    14   109900 argini… ENSMUSG0000002…
+##  2 Apod    GSM2545336      36194 Mus muscu…     8 Fema… Influenz… C57BL…     8 Cereb…    14    11815 apolip… ENSMUSG0000002…
+##  3 Cyp2d22 GSM2545336       4060 Mus muscu…     8 Fema… Influenz… C57BL…     8 Cereb…    14    56448 cytoch… ENSMUSG0000006…
+##  4 Klk6    GSM2545336        287 Mus muscu…     8 Fema… Influenz… C57BL…     8 Cereb…    14    19144 kallik… ENSMUSG0000005…
+##  5 Fcrls   GSM2545336         85 Mus muscu…     8 Fema… Influenz… C57BL…     8 Cereb…    14    80891 Fc rec… ENSMUSG0000001…
+##  6 Slc2a4  GSM2545336        782 Mus muscu…     8 Fema… Influenz… C57BL…     8 Cereb…    14    20528 solute… ENSMUSG0000001…
+##  7 Exd2    GSM2545336       1619 Mus muscu…     8 Fema… Influenz… C57BL…     8 Cereb…    14    97827 exonuc… ENSMUSG0000003…
+##  8 Gjc2    GSM2545336        288 Mus muscu…     8 Fema… Influenz… C57BL…     8 Cereb…    14   118454 gap ju… ENSMUSG0000004…
+##  9 Plp1    GSM2545336      43217 Mus muscu…     8 Fema… Influenz… C57BL…     8 Cereb…    14    18823 proteo… ENSMUSG0000003…
+## 10 Gnb4    GSM2545336       1071 Mus muscu…     8 Fema… Influenz… C57BL…     8 Cereb…    14    14696 guanin… ENSMUSG0000002…
+## # ℹ 32,418 more rows
+## # ℹ 5 more variables: external_synonym &lt;chr&gt;, chromosome_name &lt;chr&gt;, gene_biotype &lt;chr&gt;, phenotype_description &lt;chr&gt;,
+## #   hsapiens_homolog_associated_gene_name &lt;chr&gt;</code></pre>
+<p>Now we have three groups based on the <code>time</code> column.</p>
+<p>Once we have grouped our data, subsequent operations will be carried out on a per-group basis. This is facilitated by the <code>summarise()</code> function. Let’s try to find the mean expression across all genes at each time point.</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>rna_tbl <span class="sc">%&gt;%</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(time) <span class="sc">%&gt;%</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_expression =</span> <span class="fu">mean</span>(expression, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code></pre></div>
+<pre><code>## # A tibble: 3 × 2
+##    time mean_expression
+##   &lt;dbl&gt;           &lt;dbl&gt;
+## 1     0           1888.
+## 2     4           1872.
+## 3     8           1820.</code></pre>
+<p>We can also group by more than one factor at once. For example, if we wanted the mean expression value for males and females at each timepoint.</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>rna_tbl <span class="sc">%&gt;%</span> </span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(sex, time) <span class="sc">%&gt;%</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_expression =</span> <span class="fu">mean</span>(expression, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code></pre></div>
+<pre><code>## `summarise()` has grouped output by &#39;sex&#39;. You can override using the `.groups` argument.</code></pre>
+<pre><code>## # A tibble: 6 × 3
+## # Groups:   sex [2]
+##   sex     time mean_expression
+##   &lt;chr&gt;  &lt;dbl&gt;           &lt;dbl&gt;
+## 1 Female     0           1853.
+## 2 Female     4           1892.
+## 3 Female     8           1901.
+## 4 Male       0           1934.
+## 5 Male       4           1852.
+## 6 Male       8           1712.</code></pre>
+<p>Similarly, once the data is grouped, we can also summarise several variables at the same time.</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>rna_tbl <span class="sc">%&gt;%</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(sex, time) <span class="sc">%&gt;%</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_expression =</span> <span class="fu">mean</span>(expression, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">med_expression =</span> <span class="fu">median</span>(expression, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code></pre></div>
+<pre><code>## `summarise()` has grouped output by &#39;sex&#39;. You can override using the `.groups` argument.</code></pre>
+<pre><code>## # A tibble: 6 × 4
+## # Groups:   sex [2]
+##   sex     time mean_expression med_expression
+##   &lt;chr&gt;  &lt;dbl&gt;           &lt;dbl&gt;          &lt;dbl&gt;
+## 1 Female     0           1853.           528.
+## 2 Female     4           1892.           568 
+## 3 Female     8           1901.           557 
+## 4 Male       0           1934.           573 
+## 5 Male       4           1852.           535 
+## 6 Male       8           1712.           496.</code></pre>
+<p><br> <br></p>
+<p><strong>Challenge: Using the <code>tidyverse</code> for data manipulation and analysis</strong></p>
+<p>Use the <code>dplyr()</code> functions that we have discussed to answer the following questions:</p>
+<ol style="list-style-type: decimal">
+<li>How many protein_coding genes were measured in this study?</li>
+<li>What is the mean expression of ‘lncRNA’ and ‘miRNA’ genes for males and females at 8-days post-treatment?</li>
+<li>Identify genes associated with the “abnormal DNA methylation” phenotype, and calculate their mean expression (in log) at time 0-, 4- and 8-days post-treatment. <br></li>
+</ol>
+<details>
+<summary>
+Solution
+</summary>
+<p><br></p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>rna_tbl <span class="sc">%&gt;%</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(gene_biotype) <span class="sc">%&gt;%</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">number =</span> <span class="fu">length</span>(time))</span></code></pre></div>
+<pre><code>## # A tibble: 13 × 2
+##    gene_biotype                       number
+##    &lt;chr&gt;                               &lt;int&gt;
+##  1 IG_C_gene                              22
+##  2 TEC                                    88
+##  3 lncRNA                               1518
+##  4 miRNA                                 154
+##  5 polymorphic_pseudogene                 44
+##  6 processed_pseudogene                 1298
+##  7 protein_coding                      29062
+##  8 scaRNA                                 22
+##  9 snoRNA                                110
+## 10 transcribed_processed_pseudogene       22
+## 11 transcribed_unitary_pseudogene         22
+## 12 transcribed_unprocessed_pseudogene     22
+## 13 unprocessed_pseudogene                 44</code></pre>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Can be done easily with count()</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>rna_tbl <span class="sc">%&gt;%</span></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(gene_biotype)</span></code></pre></div>
+<pre><code>## # A tibble: 13 × 2
+##    gene_biotype                           n
+##    &lt;chr&gt;                              &lt;int&gt;
+##  1 IG_C_gene                             22
+##  2 TEC                                   88
+##  3 lncRNA                              1518
+##  4 miRNA                                154
+##  5 polymorphic_pseudogene                44
+##  6 processed_pseudogene                1298
+##  7 protein_coding                     29062
+##  8 scaRNA                                22
+##  9 snoRNA                               110
+## 10 transcribed_processed_pseudogene      22
+## 11 transcribed_unitary_pseudogene        22
+## 12 transcribed_unprocessed_pseudogene    22
+## 13 unprocessed_pseudogene                44</code></pre>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>rna_tbl <span class="sc">%&gt;%</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(gene_biotype <span class="sc">==</span> <span class="st">&quot;lncRNA&quot;</span> <span class="sc">|</span> gene_biotype <span class="sc">==</span> <span class="st">&quot;miRNA&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(sex, gene_biotype) <span class="sc">%&gt;%</span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_exp =</span> <span class="fu">mean</span>(expression, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code></pre></div>
+<pre><code>## `summarise()` has grouped output by &#39;sex&#39;. You can override using the `.groups` argument.</code></pre>
+<pre><code>## # A tibble: 4 × 3
+## # Groups:   sex [2]
+##   sex    gene_biotype mean_exp
+##   &lt;chr&gt;  &lt;chr&gt;           &lt;dbl&gt;
+## 1 Female lncRNA         800.  
+## 2 Female miRNA            9.02
+## 3 Male   lncRNA         190.  
+## 4 Male   miRNA           11.4</code></pre>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>rna_tbl <span class="sc">%&gt;%</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(phenotype_description <span class="sc">==</span> <span class="st">&quot;abnormal DNA methylation&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(gene, time) <span class="sc">%&gt;%</span></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_exp =</span> <span class="fu">mean</span>(expression, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">log_mean_exp =</span> <span class="fu">log</span>(mean_exp))</span></code></pre></div>
+<pre><code>## `summarise()` has grouped output by &#39;gene&#39;. You can override using the `.groups` argument.</code></pre>
+<pre><code>## # A tibble: 6 × 4
+## # Groups:   gene [2]
+##   gene   time mean_exp log_mean_exp
+##   &lt;chr&gt; &lt;dbl&gt;    &lt;dbl&gt;        &lt;dbl&gt;
+## 1 Xist      0   24164         10.1 
+## 2 Xist      4   20184.         9.91
+## 3 Xist      8   24609.        10.1 
+## 4 Zdbf2     0     534.         6.28
+## 5 Zdbf2     4     570.         6.35
+## 6 Zdbf2     8     496.         6.21</code></pre>
+</details>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

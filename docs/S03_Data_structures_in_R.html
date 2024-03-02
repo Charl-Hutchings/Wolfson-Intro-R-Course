@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Lesson 3: Data structures in R</title>
+
+<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  { color: #cccccc; background-color: #303030; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ffcfaf; } /* Alert */
+code span.an { color: #7f9f7f; font-weight: bold; } /* Annotation */
+code span.at { } /* Attribute */
+code span.bn { color: #dca3a3; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #f0dfaf; } /* ControlFlow */
+code span.ch { color: #dca3a3; } /* Char */
+code span.cn { color: #dca3a3; font-weight: bold; } /* Constant */
+code span.co { color: #7f9f7f; } /* Comment */
+code span.cv { color: #7f9f7f; font-weight: bold; } /* CommentVar */
+code span.do { color: #7f9f7f; } /* Documentation */
+code span.dt { color: #dfdfbf; } /* DataType */
+code span.dv { color: #dcdccc; } /* DecVal */
+code span.er { color: #c3bf9f; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #c0bed1; } /* Float */
+code span.fu { color: #efef8f; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #7f9f7f; font-weight: bold; } /* Information */
+code span.kw { color: #f0dfaf; } /* Keyword */
+code span.op { color: #f0efd0; } /* Operator */
+code span.ot { color: #efef8f; } /* Other */
+code span.pp { color: #ffcfaf; font-weight: bold; } /* Preprocessor */
+code span.sc { color: #dca3a3; } /* SpecialChar */
+code span.ss { color: #cc9393; } /* SpecialString */
+code span.st { color: #cc9393; } /* String */
+code span.va { } /* Variable */
+code span.vs { color: #cc9393; } /* VerbatimString */
+code span.wa { color: #7f9f7f; font-weight: bold; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">WolfWorks: An Introduction to R</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Setup
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="./S00_background.html">Course Outline</a>
+    </li>
+    <li>
+      <a href="./S00_setup.html">Course Setup</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Lessons
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="./S01_R_and_RStudio.html">R and RStudio</a>
+    </li>
+    <li>
+      <a href="./S02_Objects_in_R.html">Objects in R</a>
+    </li>
+    <li>
+      <a href="./S03_Data_structures_in_R.html">Data structures in R</a>
+    </li>
+    <li>
+      <a href="./S04_Starting_with_data.html">Starting with data</a>
+    </li>
+    <li>
+      <a href="./S05_Intro_tidyverse.html">Intro to the tidyverse</a>
+    </li>
+    <li>
+      <a href="./S06_Data_visualisation_ggplot.html">Data visualisation with ggplot2</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="./contact.html">Contact</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/Charl-Hutchings/RIntro">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Lesson 3: Data structures in R</h1>
+
+</div>
+
+
+<style type="text/css">
+
+body, td {
+   font-size: 18px;
+}
+code.r{
+  font-size: 14px;
+}
+pre {
+  font-size: 14px
+}
+</style>
+<p><em>This is the course handbook for WolfWorks: An introduction to R.</em></p>
+<hr />
+<p>Objectives:</p>
+<ol style="list-style-type: decimal">
+<li>Have a basic knowledge of the key data structures used in R: <em>vectors</em>, <em>data frames</em>, and <em>matrices</em></li>
+<li>Be aware of the different data types that can be stored, including <em>numeric</em>, <em>character</em> and <em>factors</em></li>
+<li>Understand how to generate a <code>data.frame</code> and access information from this structure using indexing</li>
+<li>Know how to identify and deal with missing data in R</li>
+</ol>
+<hr />
+<div id="vectors-and-data-types" class="section level2">
+<h2>Vectors and data types</h2>
+<p>R has many structures in which data can be stored and manipulated:</p>
+<ul>
+<li>Vectors</li>
+<li>Data frames</li>
+<li>Matrices</li>
+<li>Lists</li>
+<li>Factors <br> <br></li>
+</ul>
+<p>The most common and basic of these structures is a vector, sometimes referred to as an <strong>atomic vector</strong>. Whilst vectors can be used as a structure in themselves, they are also the basic building blocks of several other data types, as we will see later. <br> <br></p>
+<p>A vector is simply a collection of values. These values can any of the 6 basic data types in R:</p>
+<ol style="list-style-type: decimal">
+<li><strong>character</strong> = a series of letters, numbers and/or punctuation marks (a <strong>string</strong>). Always found between quotation marks (single or double) e.g., <code>"a"</code>, <code>"fish"</code>, <code>"3.14"</code>. If a number is found in quotation marks, R will interpret this data as being of type character, not numeric. This is important because R cannot then use this data in a numeric manner i.e., to carry out arithmetic.</li>
+<li><strong>double</strong> = one of the two <strong>numeric</strong> data classes in R, standing for <em>double precision floating point numbers</em>. This means any real number, an integer or a decimal (10, 3.14, 1.45765, 10000, 5)</li>
+<li><strong>integer</strong> = the second of the two <strong>numeric</strong> data classes in R, holding only integer values e.g., 5L (the “L” tells R to store this as an integer rather than double)</li>
+<li><strong>logical</strong> = a <code>TRUE</code>, <code>FALSE</code> class</li>
+<li><strong>complex</strong> = complex numbers with real and imaginary parts</li>
+<li><strong>raw</strong> = holds raw bytes</li>
+</ol>
+<p>Data types 5 and 6 are rarely used and will not be covered in this workshop. As outlined above, <strong>numeric</strong> data in R can be stored as either <strong>double</strong> or <strong>integer</strong>. You don’t need to worry about this because R will automatically convert between these classes when required for mathemetical purposes. There is really no need to explicitly state or know which or the two <strong>numeric</strong> classes the data is. <br> <br></p>
+<p>A <em>vector</em> is a collection of values <strong>of the same data class</strong>. You can visualise a vector like this:</p>
+<p><img src="images/Vectors_in_R.jpeg" width="80%" style="display: block; margin: auto;" /> <br></p>
+<p>To create a vector we use the <code>c()</code> function, where <code>c</code> stands for combine. We pass the function our values, each separated by “,”.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Create a numeric vector and assign to the object weight_g</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>weight_g <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">50</span>, <span class="dv">60</span>, <span class="dv">57</span>, <span class="dv">82</span>)</span></code></pre></div>
+<p>This is a numeric vector. We can also create a character vector.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Create a character vector and assign to the object molecules</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>molecules <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;dna&quot;</span>, <span class="st">&quot;rna&quot;</span>, <span class="st">&quot;protein&quot;</span>)</span></code></pre></div>
+<p><br></p>
+<p><strong>Question:</strong> What happens if we try to create a character vector but forget to include our values in quotation marks?</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="do">## What if we forget our quotation marks?</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>molecules <span class="ot">&lt;-</span> <span class="fu">c</span>(dna, rna, protein)</span></code></pre></div>
+<p><br> <br></p>
+<p><strong>Exploring vectors</strong></p>
+<p>There are several key functions that allow us to find out information about a vector. The <code>class()</code> and <code>length()</code> functions will tell us what data class is stored within a vector and how many data elements there are.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Check class and length of weight_g</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(weight_g)</span></code></pre></div>
+<pre><code>## [1] &quot;numeric&quot;</code></pre>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(weight_g)</span></code></pre></div>
+<pre><code>## [1] 4</code></pre>
+<p><br></p>
+<p><strong>Question:</strong> What will be the outputs of <code>class</code> and <code>length</code> when we pass our <code>molecules</code> vector?</p>
+<p>To get both of these pieces of information at the same time we can use the <code>str()</code> function, standing for structure.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Check the structure of weight_g</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(weight_kg)</span></code></pre></div>
+<pre><code>##  num 62</code></pre>
+<p><br> <br></p>
+<p><strong>Indexing vectors</strong></p>
+<p>Sometimes we might wish to access only certain elements of a vector. To do this we need to introduce the concept of <em>indexing</em>. The term <em>indexing</em> refers to selecting a subset of elements. To do this, we use square brackets and provide one or more indices.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Return the first element in the weight_g vector</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>weight_g[<span class="dv">1</span>]</span></code></pre></div>
+<pre><code>## [1] 50</code></pre>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Return the third element in the weight_g vector</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>weight_g[<span class="dv">3</span>]</span></code></pre></div>
+<pre><code>## [1] 57</code></pre>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Return all elements between positions 1 and 3 in weight_g</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>weight_g[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>] <span class="do">## Based on a sequence</span></span></code></pre></div>
+<pre><code>## [1] 50 60 57</code></pre>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>weight_g[<span class="sc">-</span><span class="dv">4</span>] <span class="do">## Using the minus sign to ask for all except 4</span></span></code></pre></div>
+<pre><code>## [1] 50 60 57</code></pre>
+<p><br></p>
+<p><strong>Question:</strong> How could we index multiple elements that are not together in a sequence. For example, if I only wanted elements 1 and 3 from <code>weight_g</code>? <br></p>
+<p>We can also do more complex indexing based on conditions (<strong>conditional indexing</strong>). For instance, if we wanted to return the element “rna” from our <code>molecules</code> vector but we don’t remember which position it is in.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Index all elements in molecules that are &quot;rna&quot;</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>molecules[molecules <span class="sc">==</span> <span class="st">&quot;rna&quot;</span>]</span></code></pre></div>
+<pre><code>## [1] &quot;rna&quot;</code></pre>
+<p>We can also do this for numeric vectors using mathematic operators. Let’s try to subset elements from our <code>weight_g</code> vector that have a value greater than 55.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Index all elements in weight_g that are &gt; 55</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>weight_g[weight_g <span class="sc">&gt;</span> <span class="dv">55</span>]</span></code></pre></div>
+<pre><code>## [1] 60 57 82</code></pre>
+<p>We can combine multiple conditions use the <code>&amp;</code> (and) and <code>|</code> (or) operators.</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Index all elements in weight_g that are &gt; 55 and &lt; 80</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>weight_g[weight_g <span class="sc">&gt;</span> <span class="dv">55</span> <span class="sc">&amp;</span> weight_g <span class="sc">&lt;</span> <span class="dv">80</span>]</span></code></pre></div>
+<pre><code>## [1] 60 57</code></pre>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Index all elements in weight_g that are &gt; 55 or &lt; 80</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>weight_g[weight_g <span class="sc">&gt;</span> <span class="dv">55</span> <span class="sc">|</span> weight_g <span class="sc">&lt;</span> <span class="dv">80</span>]</span></code></pre></div>
+<pre><code>## [1] 50 60 57 82</code></pre>
+<p><br></p>
+<p><strong>Question:</strong> What is actually happening behind the scenes when we do conditional indexing? Think about the data classes. See what happens if we execute the condition outside of the indexing.</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>weight_g <span class="sc">&gt;</span> <span class="dv">55</span></span></code></pre></div>
+<pre><code>## [1] FALSE  TRUE  TRUE  TRUE</code></pre>
+<p><br></p>
+<p><strong>Question:</strong> Why does <code>"four" &gt; "five"</code> return <code>TRUE</code>? What is happening in this conditional statement?</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;four&quot;</span> <span class="sc">&gt;</span> <span class="st">&quot;five&quot;</span></span></code></pre></div>
+<pre><code>## [1] TRUE</code></pre>
+<p><br> <br></p>
+<p><strong>Coercing vectors into a single data class</strong></p>
+<p>One of the primary features of a vector is that it represents a linear collection of elements that <strong>must</strong> be of the same data class. Above we looked at both numeric and character vectors. If we try to create a vector with multiple data classes, R will automatically <strong>coerce</strong> the elements into a single data type.</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Try to generate a vector with multiple data classes</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>mixed_vector <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;dna&quot;</span>, <span class="dv">12</span>, <span class="dv">45</span>, <span class="st">&quot;rna&quot;</span>, <span class="dv">77</span>)</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(mixed_vector)</span></code></pre></div>
+<pre><code>##  chr [1:5] &quot;dna&quot; &quot;12&quot; &quot;45&quot; &quot;rna&quot; &quot;77&quot;</code></pre>
+<p>The numeric values have been coerced into character values, which we can see from (i) the <code>chr</code> and presence of quotation marks. <br></p>
+<p><strong>Question:</strong> What is the hierarchy which R uses for the coercion of different data types? Try generating vectors with:</p>
+<ol style="list-style-type: decimal">
+<li>Character and numeric values = coerced to…</li>
+<li>Character and logical values = coerced to…</li>
+<li>logical and numeric values = coerced to…</li>
+</ol>
+<p>For more information about coercion behavior in R see <a href="https://www.zigya.com/blog/what-is-coercion-in-r/">here</a>.</p>
+<p>It is important to know what data class you are dealing with because this will influence what you can and cannot do with the data. We can convert the data type of a vector to a different class using the “as” family of functions:</p>
+<ul>
+<li><code>as.character()</code>: convert to character type data</li>
+<li><code>as.numeric()</code>: convert to numerical vector</li>
+<li><code>as.integer()</code>: convert to integer vector</li>
+<li><code>as.logical()</code>: convert to logical vector <br> <br></li>
+</ul>
+<p><strong>Vectorization in R</strong></p>
+<p>Most of R’s functions are <strong>vectorized</strong> meaning that the function will operate on each element of the vector. This makes coding more concise, easier to read, and less prone to errors.</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Vectorized function - function applied to all elements of a vector independently</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>weight_g <span class="sc">*</span> <span class="dv">5</span></span></code></pre></div>
+<pre><code>## [1] 250 300 285 410</code></pre>
+<p><br> <br></p>
+<p><strong>Factor vectors</strong></p>
+<p>R has a special way of dealing with categorical data - the <strong>factor</strong>. Categorical data might be something such as sex - “Male”, “Female” - or tumour stage - “Stage1”, “Stage2”, “Stage3”, etc. Critically, the possible entries, or <strong>levels</strong>, of a factor are limited.</p>
+<p>While factors look and behave like character vectors, they are actually stored by R as an integer vector, so it is important to be careful with them when treating them as strings or transforming them to other data types.</p>
+<p>We can convert a character vector into a factor using the <code>factor()</code> function. Let’s try this with our <code>molecules</code> vector.</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Convert molecules vector into a factor</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>molecules <span class="ot">&lt;-</span> <span class="fu">factor</span>(molecules)</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Check structure</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(molecules)</span></code></pre></div>
+<pre><code>##  Factor w/ 3 levels &quot;dna&quot;,&quot;protein&quot;,..: 1 3 2</code></pre>
+<p>We now have a factor with each category stored as a level. As mentioned above, R treats the levels of a factor as integers, here 1, 2 and 3. These integers are assigned to the levels alphabetically, which is not necessarily the order in which we specified them. We can check the order of our levels using the <code>levels()</code> function.</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Check levels</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(molecules)</span></code></pre></div>
+<pre><code>## [1] &quot;dna&quot;     &quot;protein&quot; &quot;rna&quot;</code></pre>
+<p>These are returned in alphabetical order. For plotting or statistical analysis, the order of the levels will sometimes matter. If we want to re-order the levels of a factor we can make use of the <code>levels</code> argument of the <code>factor()</code> function.</p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Create a factor and specify level order</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>molecules <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="at">x =</span> molecules, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;dna&quot;</span>, <span class="st">&quot;rna&quot;</span>, <span class="st">&quot;protein&quot;</span>))</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Check</span></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(molecules)</span></code></pre></div>
+<pre><code>## [1] &quot;dna&quot;     &quot;rna&quot;     &quot;protein&quot;</code></pre>
+<p>Alternatively, we can over-write the pre-existing levels of a factor like so:</p>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Re-order the levels of a factor</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(molecules) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;protein&quot;</span>, <span class="st">&quot;dna&quot;</span>, <span class="st">&quot;rna&quot;</span>)</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Check</span></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(molecules)</span></code></pre></div>
+<pre><code>##  Factor w/ 3 levels &quot;protein&quot;,&quot;dna&quot;,..: 1 2 3</code></pre>
+<p>Factor vectors can be converted back to numeric or character classes using the <code>as.numeric()</code> and <code>as.character()</code> functions. <br> <br></p>
+<p><strong>Challenge: Vectors in R</strong> <br> Create a new vector called <code>heights</code> with the following values: 63, 69, 60, 65, NA, 68, 61, 70, 64, NA, 72, 65. Use the <code>median()</code> function to determine the median of these values. Remember that you can use <code>?median</code> to ask for help using this function. After this, use R to determine how many people in the set are taller than 67 inches.</p>
+<details>
+<summary>
+Solution
+</summary>
+<p><br></p>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>heights <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">63</span>, <span class="dv">69</span>, <span class="dv">60</span>, <span class="dv">65</span>, <span class="cn">NA</span>, <span class="dv">68</span>, <span class="dv">61</span>, <span class="dv">70</span>, <span class="dv">64</span>, <span class="cn">NA</span>, <span class="dv">72</span>, <span class="dv">65</span>)</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a><span class="fu">median</span>(<span class="at">x =</span> heights) <span class="do">## gives NA</span></span></code></pre></div>
+<pre><code>## [1] NA</code></pre>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">median</span>(<span class="at">x =</span> heights, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="do">## gives 65</span></span></code></pre></div>
+<pre><code>## [1] 65</code></pre>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>heights <span class="sc">&gt;</span> <span class="dv">67</span></span></code></pre></div>
+<pre><code>##  [1] FALSE  TRUE FALSE FALSE    NA  TRUE FALSE  TRUE FALSE    NA  TRUE FALSE</code></pre>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">which</span>(heights <span class="sc">&gt;</span> <span class="dv">67</span>)</span></code></pre></div>
+<pre><code>## [1]  2  6  8 11</code></pre>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(<span class="fu">which</span>(heights <span class="sc">&gt;</span> <span class="dv">67</span>))</span></code></pre></div>
+<pre><code>## [1] 4</code></pre>
+</details>
+<p><br></p>
+<hr />
+</div>
+<div id="data-frames" class="section level2">
+<h2>Data frames</h2>
+<p>Vectors are arguably the most important base structure in R. However, most of the time we want to store multiple data variables of different data types in a single object. That is where data frames come in. A <em>data frame</em> is a simple tabular structure in which the columns are vectors of the same length. Since a data frame contains multiple vectors it is able to store data of multiple different classes.</p>
+<p>A data frame is the most similar structure in R to a standard spreadsheet.</p>
+<p><img src="images/Data_frame_in_R.png" width="80%" style="display: block; margin: auto;" /> <br></p>
+<p>We can generate a data frame from vectors of the same length using the <code>data.frame()</code> function. Let’s create a data frame containing information about Cambridge Students.</p>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Create vectors that will become columns (all must be the same length)</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>sex <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;male&quot;</span>, <span class="st">&quot;female&quot;</span>, <span class="st">&quot;female&quot;</span>, <span class="st">&quot;male&quot;</span>, <span class="st">&quot;female&quot;</span>)</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>height_cm <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">175</span>, <span class="dv">165</span>, <span class="cn">NA</span>, <span class="dv">168</span>, <span class="dv">178</span>)</span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>college <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Wolfson&quot;</span>, <span class="st">&quot;Kings&quot;</span>, <span class="st">&quot;Lucy Cavendish&quot;</span>, <span class="st">&quot;St.Catherines&quot;</span>, <span class="st">&quot;Wolfson&quot;</span>)</span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a><span class="do">## Combine vectors into a single data frame</span></span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>students <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(sex, height_cm, college)</span>
+<span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-9"><a href="#cb52-9" aria-hidden="true" tabindex="-1"></a><span class="do">## Check the structure</span></span>
+<span id="cb52-10"><a href="#cb52-10" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(students)</span></code></pre></div>
+<pre><code>## &#39;data.frame&#39;:    5 obs. of  3 variables:
+##  $ sex      : chr  &quot;male&quot; &quot;female&quot; &quot;female&quot; &quot;male&quot; ...
+##  $ height_cm: num  175 165 NA 168 178
+##  $ college  : chr  &quot;Wolfson&quot; &quot;Kings&quot; &quot;Lucy Cavendish&quot; &quot;St.Catherines&quot; ...</code></pre>
+<p><br> <br></p>
+<p><strong>Inspecting data frames</strong></p>
+<p>In addition to <code>str</code>, there are many functions that can be used to inspect the data stored within a <code>data.frame</code>.</p>
+<ul>
+<li><code>dim()</code> = returns a vector in which the first element is the number of rows and the second element is the number of columns</li>
+<li><code>nrow()</code> = returns the number of rows</li>
+<li><code>ncol()</code> = returns the number of columns</li>
+<li><code>head()</code> = displays all columns of the first 6 rows</li>
+<li><code>tail()</code> = displays all columns of the last 6 rows</li>
+<li><code>names()</code> or <code>colnames()</code> = returns the column names</li>
+<li><code>rownames()</code> = returns the row names</li>
+<li><code>summary()</code> = provides summary statistics for each column <br> <br></li>
+</ul>
+<p><strong>Indexing data frames</strong></p>
+<p>We already learnt how to subset information from a vector by indexing. Now we are going to extend this to subsetting information from a data frame. The main difference here is that, unlike 1 dimensional vectors, data frames have 2 dimensions (the rows and columns). Hence, we need to provide two indices in our square brackets - <code>[row, column]</code>.</p>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="do">## First element in the first column of the data frame</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>students[<span class="dv">1</span>, <span class="dv">1</span>]</span></code></pre></div>
+<pre><code>## [1] &quot;male&quot;</code></pre>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Second element in the first column of the data frame</span></span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>students[<span class="dv">2</span>, <span class="dv">1</span>]</span></code></pre></div>
+<pre><code>## [1] &quot;female&quot;</code></pre>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Second element in the third column of the data frame</span></span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>students[<span class="dv">2</span>, <span class="dv">3</span>]</span></code></pre></div>
+<pre><code>## [1] &quot;Kings&quot;</code></pre>
+<p>If we leave one of the indices empty, the default is to give us everything.</p>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="do">## All elements in the second column of the data frame</span></span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>students[, <span class="dv">2</span>]</span></code></pre></div>
+<pre><code>## [1] 175 165  NA 168 178</code></pre>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="do">## The first element in all columns of the data frame</span></span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>students[<span class="dv">1</span>, ]</span></code></pre></div>
+<pre><code>##    sex height_cm college
+## 1 male       175 Wolfson</code></pre>
+<p>As before, we can also exclude certain indices of the data frame using the “-” sign.</p>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="do">## All columns except the third</span></span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>students[, <span class="sc">-</span><span class="dv">3</span>]</span></code></pre></div>
+<pre><code>##      sex height_cm
+## 1   male       175
+## 2 female       165
+## 3 female        NA
+## 4   male       168
+## 5 female       178</code></pre>
+<p>In addition to the indexing we saw with vectors, data frames can also be indexed using the column names directly:</p>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Subset using column names as indices</span></span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>students[, <span class="st">&quot;sex&quot;</span>]</span></code></pre></div>
+<pre><code>## [1] &quot;male&quot;   &quot;female&quot; &quot;female&quot; &quot;male&quot;   &quot;female&quot;</code></pre>
+<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>students<span class="sc">$</span>sex</span></code></pre></div>
+<pre><code>## [1] &quot;male&quot;   &quot;female&quot; &quot;female&quot; &quot;male&quot;   &quot;female&quot;</code></pre>
+<p>One can use <code>&amp;</code> (and), <code>|</code> (or) and <code>!</code> (not) logical operators for complex subsetting, as we saw before for vectors.</p>
+<hr />
+</div>
+<div id="matrices" class="section level2">
+<h2>Matrices</h2>
+<p>The final data structure we are going to meet in this workshop is a <strong>matrix</strong>. Like data frames, matrices are two dimensional - they have both rows and columns. Unlike data frames, however, matrices can only store one data type: <code>numeric</code>, <code>logical</code> or <code>character</code>. In that respect, matrices are more similar to a vector.</p>
+<p>To generate a matrix we use the <code>matrix()</code> function. This function takes a vector of values (of any single data type) to populate the matrix with and the number of rows and columns that this should be divided into. The values are filled in column-by-column.</p>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Create a 3x3 matrix containing the values 1 to 9</span></span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>(example_matrix <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>, <span class="at">ncol =</span> <span class="dv">3</span>, <span class="at">nrow =</span> <span class="dv">3</span>))</span></code></pre></div>
+<pre><code>##      [,1] [,2] [,3]
+## [1,]    1    4    7
+## [2,]    2    5    8
+## [3,]    3    6    9</code></pre>
+<div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Create a 3x2 matrix containing the character values 1 to 6</span></span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>values <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;one&quot;</span>, <span class="st">&quot;two&quot;</span>, <span class="st">&quot;three&quot;</span>, <span class="st">&quot;four&quot;</span>, <span class="st">&quot;five&quot;</span>, <span class="st">&quot;six&quot;</span>)</span>
+<span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a>(example_matrix_2 <span class="ot">&lt;-</span> <span class="fu">matrix</span>(values, <span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">nrow =</span> <span class="dv">3</span>))</span></code></pre></div>
+<pre><code>##      [,1]    [,2]  
+## [1,] &quot;one&quot;   &quot;four&quot;
+## [2,] &quot;two&quot;   &quot;five&quot;
+## [3,] &quot;three&quot; &quot;six&quot;</code></pre>
+<p>A matrix can be indexed in the same way as a data frame, using <code>[row, col]</code>.</p>
+<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="do">## First element in the second column of a matrix</span></span>
+<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>example_matrix[<span class="dv">1</span>, <span class="dv">2</span>]</span></code></pre></div>
+<pre><code>## [1] 4</code></pre>
+<p>Matrices are commonly used in statistical analyses and modelling. If we have a data frame containing only numerical information and wish to convert this into a matrix we can do so using the <code>as.matrix()</code> function.</p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

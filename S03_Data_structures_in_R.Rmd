@@ -1,0 +1,529 @@
+---
+title: "Lesson 3: Data structures in R"
+output: 
+  html_document:
+    toc: FALSE
+---
+
+<style type="text/css">
+
+body, td {
+   font-size: 18px;
+}
+code.r{
+  font-size: 14px;
+}
+pre {
+  font-size: 14px
+}
+</style>
+
+
+*This is the course handbook for WolfWorks: An introduction to R.*
+
+***
+
+Objectives: 
+
+1. Have a basic knowledge of the key data structures used in R: *vectors*, *data frames*, and *matrices* 
+2. Be aware of the different data types that can be stored, including *numeric*, *character* and *factors*
+3. Understand how to generate a `data.frame` and access information from this structure using indexing
+4. Know how to identify and deal with missing data in R
+
+
+***
+
+
+## Vectors and data types 
+
+R has many structures in which data can be stored and manipulated: 
+
+* Vectors
+* Data frames
+* Matrices
+* Lists
+* Factors
+<br>
+<br>
+
+The most common and basic of these structures is a vector, sometimes referred to
+as an **atomic vector**. Whilst vectors can be used as a structure in themselves, 
+they are also the basic building blocks of several other data types, as we will 
+see later.
+<br>
+<br>
+
+A vector is simply a collection of values. These values can any of the 6 basic
+data types in R: 
+
+1. **character** = a series of letters, numbers and/or punctuation marks (a **string**). Always found between quotation marks (single or double) e.g., `"a"`, `"fish"`, `"3.14"`. If a number is found in quotation marks, R will interpret this data as being of type character, not numeric. This is important because R cannot then use this data in a numeric manner i.e., to carry out arithmetic. 
+2. **double** = one of the two **numeric** data classes in R, standing for *double precision floating point numbers*. This means any real number, an integer or a decimal (10, 3.14, 1.45765, 10000, 5)
+3. **integer** = the second of the two **numeric** data classes in R, holding only integer values e.g., 5L (the "L" tells R to store this as an integer rather than double)
+4. **logical** = a `TRUE`, `FALSE` class
+5. **complex** = complex numbers with real and imaginary parts
+6. **raw** = holds raw bytes
+
+Data types 5 and 6 are rarely used and will not be covered in this workshop.
+As outlined above, **numeric** data in R can be stored as either **double** or 
+**integer**. You don't need to worry about this because R will automatically 
+convert between these classes when required for mathemetical purposes. There is
+really no need to explicitly state or know which or the two **numeric** classes
+the data is.
+<br>
+<br>
+
+A *vector* is a collection of values **of the same data class**. You can 
+visualise a vector like this: 
+
+
+```{r, echo = FALSE, fig.align = "center", out.width = "80%"}
+knitr::include_graphics("images/Vectors_in_R.jpeg", error = FALSE)
+```
+<br>
+
+
+To create a vector we use the `c()` function, where `c` stands for combine. 
+We pass the function our values, each separated by ",".
+
+
+```{r}
+## Create a numeric vector and assign to the object weight_g
+weight_g <- c(50, 60, 57, 82)
+```
+
+
+This is a numeric vector. We can also create a character vector.
+
+
+```{r}
+## Create a character vector and assign to the object molecules
+molecules <- c("dna", "rna", "protein")
+```
+<br>
+
+**Question:**
+What happens if we try to create a character vector but forget to include our
+values in quotation marks?
+
+
+```{r, eval = FALSE}
+## What if we forget our quotation marks?
+molecules <- c(dna, rna, protein)
+```
+<br>
+<br>
+
+
+**Exploring vectors**
+
+There are several key functions that allow us to find out information about a
+vector. The `class()` and `length()` functions will tell us what data class is
+stored within a vector and how many data elements there are.
+
+
+```{r}
+## Check class and length of weight_g
+class(weight_g)
+length(weight_g)
+```
+<br>
+
+**Question:** 
+What will be the outputs of `class` and `length` when we pass our `molecules`
+vector?
+
+
+To get both of these pieces of information at the same time we can use the `str()`
+function, standing for structure.
+
+
+```{r}
+## Check the structure of weight_g
+str(weight_kg)
+```
+<br>
+<br>
+
+**Indexing vectors**
+
+Sometimes we might wish to access only certain elements of a vector. To do this
+we need to introduce the concept of *indexing*. The term *indexing* refers to 
+selecting a subset of elements. To do this, we use square brackets and provide
+one or more indices. 
+
+
+```{r}
+## Return the first element in the weight_g vector
+weight_g[1]
+
+## Return the third element in the weight_g vector
+weight_g[3]
+
+## Return all elements between positions 1 and 3 in weight_g
+weight_g[1:3] ## Based on a sequence
+weight_g[-4] ## Using the minus sign to ask for all except 4
+```
+<br>
+
+**Question:** 
+How could we index multiple elements that are not together in a sequence. For 
+example, if I only wanted elements 1 and 3 from `weight_g`?
+<br>
+
+We can also do more complex indexing based on conditions (**conditional indexing**).
+For instance, if we wanted to return the element "rna" from our `molecules` 
+vector but we don't remember which position it is in.
+
+
+```{r}
+## Index all elements in molecules that are "rna"
+molecules[molecules == "rna"]
+```
+
+
+We can also do this for numeric vectors using mathematic operators. Let's try
+to subset elements from our `weight_g` vector that have a value greater than 55.
+
+
+```{r}
+## Index all elements in weight_g that are > 55
+weight_g[weight_g > 55]
+```
+
+
+We can combine multiple conditions use the `&` (and) and `|` (or) operators.
+
+
+```{r}
+## Index all elements in weight_g that are > 55 and < 80
+weight_g[weight_g > 55 & weight_g < 80]
+
+## Index all elements in weight_g that are > 55 or < 80
+weight_g[weight_g > 55 | weight_g < 80]
+```
+<br>
+
+**Question:**
+What is actually happening behind the scenes when we do conditional indexing?
+Think about the data classes. See what happens if we execute the condition
+outside of the indexing.
+
+
+```{r}
+weight_g > 55
+```
+<br>
+
+**Question:**
+Why does `"four" > "five"` return `TRUE`? What is happening in this conditional 
+statement?
+
+
+```{r}
+"four" > "five"
+```
+<br>
+<br>
+
+**Coercing vectors into a single data class**
+
+One of the primary features of a vector is that it represents a linear collection
+of elements that **must** be of the same data class. Above we looked at both 
+numeric and character vectors. If we try to create a vector with multiple data
+classes, R will automatically **coerce** the elements into a single data type.
+
+
+```{r}
+## Try to generate a vector with multiple data classes
+mixed_vector <- c("dna", 12, 45, "rna", 77)
+
+str(mixed_vector)
+```
+
+
+The numeric values have been coerced into character values, which we can see 
+from (i) the `chr` and presence of quotation marks.
+<br>
+
+**Question:**
+What is the hierarchy which R uses for the coercion of different data types?
+Try generating vectors with:
+
+1. Character and numeric values = coerced to... 
+2. Character and logical values = coerced to...
+3. logical and numeric values = coerced to...
+
+For more information about coercion behavior in R see [here](https://www.zigya.com/blog/what-is-coercion-in-r/).
+
+It is important to know what data class you are dealing with because this will 
+influence what you can and cannot do with the data. We can convert the data type
+of a vector to a different class using the "as" family of functions:
+
+* `as.character()`: convert to character type data
+* `as.numeric()`: convert to numerical vector
+* `as.integer()`: convert to integer vector
+* `as.logical()`: convert to logical vector
+<br>
+<br>
+
+**Vectorization in R** 
+
+Most of R's functions are **vectorized** meaning that the function will operate 
+on each element of the vector. This makes coding more concise, easier to read, 
+and less prone to errors.
+
+
+```{r}
+## Vectorized function - function applied to all elements of a vector independently
+weight_g * 5
+```
+<br>
+<br>
+
+**Factor vectors**
+
+R has a special way of dealing with categorical data - the **factor**. 
+Categorical data might be something such as sex - "Male", "Female" - or tumour
+stage - "Stage1", "Stage2", "Stage3", etc. Critically, the possible entries, or
+**levels**, of a factor are limited. 
+
+While factors look and behave like character vectors, they are actually stored
+by R as an integer vector, so it is important to be careful with them when
+treating them as strings or transforming them to other data types.
+
+We can convert a character vector into a factor using the `factor()` function.
+Let's try this with our `molecules` vector.
+
+
+```{r}
+## Convert molecules vector into a factor
+molecules <- factor(molecules)
+
+## Check structure
+str(molecules)
+```
+
+
+We now have a factor with each category stored as a level. As mentioned above, 
+R treats the levels of a factor as integers, here 1, 2 and 3. These integers 
+are assigned to the levels alphabetically, which is not necessarily the order in
+which we specified them. We can check the order of our levels using the `levels()`
+function.
+
+
+```{r}
+## Check levels
+levels(molecules)
+```
+
+
+These are returned in alphabetical order. For plotting or statistical analysis, 
+the order of the levels will sometimes matter. If we want to re-order the levels
+of a factor we can make use of the `levels` argument of the `factor()` function.
+
+
+```{r}
+## Create a factor and specify level order
+molecules <- factor(x = molecules, levels = c("dna", "rna", "protein"))
+
+## Check
+levels(molecules)
+```
+
+
+Alternatively, we can over-write the pre-existing levels of a factor like so:
+
+
+```{r}
+## Re-order the levels of a factor
+levels(molecules) <- c("protein", "dna", "rna")
+
+## Check
+str(molecules)
+```
+
+
+Factor vectors can be converted back to numeric or character classes using the
+`as.numeric()` and `as.character()` functions.
+<br>
+<br>
+
+**Challenge: Vectors in R**
+<br>
+Create a new vector called `heights` with the following values: 63, 69, 60, 65, 
+NA, 68, 61, 70, 64, NA, 72, 65. Use the `median()` function to determine the
+median of these values. Remember that you can use `?median` to ask for help 
+using this function. After this, use R to determine how many people in the set 
+are taller than 67 inches.
+
+
+<details>  
+<summary>Solution</summary> 
+<br>
+
+```{r}
+heights <- c(63, 69, 60, 65, NA, 68, 61, 70, 64, NA, 72, 65)
+
+median(x = heights) ## gives NA
+median(x = heights, na.rm = TRUE) ## gives 65
+
+heights > 67
+which(heights > 67)
+length(which(heights > 67))
+
+```
+
+</details>
+<br>
+
+***
+
+
+## Data frames
+
+Vectors are arguably the most important base structure in R. However, most of the
+time we want to store multiple data variables of different data types in a single
+object. That is where data frames come in. A *data frame* is a simple tabular 
+structure in which the columns are vectors of the same length. Since a data frame
+contains multiple vectors it is able to store data of multiple different classes.
+
+A data frame is the most similar structure in R to a standard spreadsheet.
+
+
+```{r, echo = FALSE, fig.align = "center", out.width = "80%"}
+knitr::include_graphics("images/Data_frame_in_R.png", error = FALSE)
+```
+<br>
+
+We can generate a data frame from vectors of the same length using the `data.frame()`
+function. Let's create a data frame containing information about Cambridge Students.
+
+
+```{r}
+## Create vectors that will become columns (all must be the same length)
+sex <- c("male", "female", "female", "male", "female")
+height_cm <- c(175, 165, NA, 168, 178)
+college <- c("Wolfson", "Kings", "Lucy Cavendish", "St.Catherines", "Wolfson")
+
+## Combine vectors into a single data frame
+students <- data.frame(sex, height_cm, college)
+
+## Check the structure
+str(students)
+```
+<br>
+<br>
+
+**Inspecting data frames**
+
+In addition to `str`, there are many functions that can be used to inspect the
+data stored within a `data.frame`.
+
+* `dim()` = returns a vector in which the first element is the number of rows and the second element is the number of columns
+* `nrow()` = returns the number of rows
+* `ncol()` = returns the number of columns
+* `head()` = displays all columns of the first 6 rows
+* `tail()` = displays all columns of the last 6 rows
+* `names()` or `colnames()` = returns the column names
+* `rownames()` = returns the row names
+* `summary()` = provides summary statistics for each column
+<br>
+<br>
+
+**Indexing data frames**
+
+We already learnt how to subset information from a vector by indexing. Now we 
+are going to extend this to subsetting information from a data frame. The main
+difference here is that, unlike 1 dimensional vectors, data frames have 2 
+dimensions (the rows and columns). Hence, we need to provide two indices in our
+square brackets - `[row, column]`.
+
+
+```{r}
+## First element in the first column of the data frame
+students[1, 1]
+
+## Second element in the first column of the data frame
+students[2, 1]
+
+## Second element in the third column of the data frame
+students[2, 3]
+```
+
+
+If we leave one of the indices empty, the default is to give us everything.
+
+
+```{r}
+## All elements in the second column of the data frame
+students[, 2]
+
+## The first element in all columns of the data frame
+students[1, ]
+```
+
+
+As before, we can also exclude certain indices of the data frame using the "-"
+sign.
+
+
+```{r}
+## All columns except the third
+students[, -3]
+```
+
+
+In addition to the indexing we saw with vectors, data frames can also be indexed
+using the column names directly:
+
+
+```{r}
+## Subset using column names as indices
+students[, "sex"]
+students$sex
+```
+
+
+One can use `&` (and), `|` (or) and `!` (not) logical operators for complex
+subsetting, as we saw before for vectors.
+
+
+***
+
+
+## Matrices 
+
+The final data structure we are going to meet in this workshop is a **matrix**.
+Like data frames, matrices are two dimensional - they have both rows and columns.
+Unlike data frames, however, matrices can only store one data type: `numeric`, 
+`logical` or `character`. In that respect, matrices are more similar to a vector.
+
+To generate a matrix we use the `matrix()` function. This function takes a vector
+of values (of any single data type) to populate the matrix with and the number
+of rows and columns that this should be divided into. The values are filled in 
+column-by-column. 
+
+
+```{r}
+## Create a 3x3 matrix containing the values 1 to 9
+(example_matrix <- matrix(1:9, ncol = 3, nrow = 3))
+
+
+## Create a 3x2 matrix containing the character values 1 to 6
+values <- c("one", "two", "three", "four", "five", "six")
+(example_matrix_2 <- matrix(values, ncol = 2, nrow = 3))
+```
+
+
+A matrix can be indexed in the same way as a data frame, using `[row, col]`.
+
+
+```{r}
+## First element in the second column of a matrix
+example_matrix[1, 2]
+```
+
+
+Matrices are commonly used in statistical analyses and modelling. If we have a
+data frame containing only numerical information and wish to convert this into 
+a matrix we can do so using the `as.matrix()` function.

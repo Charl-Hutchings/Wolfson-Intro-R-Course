@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Lesson 2: Objects in R</title>
+
+<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  { color: #cccccc; background-color: #303030; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ffcfaf; } /* Alert */
+code span.an { color: #7f9f7f; font-weight: bold; } /* Annotation */
+code span.at { } /* Attribute */
+code span.bn { color: #dca3a3; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #f0dfaf; } /* ControlFlow */
+code span.ch { color: #dca3a3; } /* Char */
+code span.cn { color: #dca3a3; font-weight: bold; } /* Constant */
+code span.co { color: #7f9f7f; } /* Comment */
+code span.cv { color: #7f9f7f; font-weight: bold; } /* CommentVar */
+code span.do { color: #7f9f7f; } /* Documentation */
+code span.dt { color: #dfdfbf; } /* DataType */
+code span.dv { color: #dcdccc; } /* DecVal */
+code span.er { color: #c3bf9f; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #c0bed1; } /* Float */
+code span.fu { color: #efef8f; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #7f9f7f; font-weight: bold; } /* Information */
+code span.kw { color: #f0dfaf; } /* Keyword */
+code span.op { color: #f0efd0; } /* Operator */
+code span.ot { color: #efef8f; } /* Other */
+code span.pp { color: #ffcfaf; font-weight: bold; } /* Preprocessor */
+code span.sc { color: #dca3a3; } /* SpecialChar */
+code span.ss { color: #cc9393; } /* SpecialString */
+code span.st { color: #cc9393; } /* String */
+code span.va { } /* Variable */
+code span.vs { color: #cc9393; } /* VerbatimString */
+code span.wa { color: #7f9f7f; font-weight: bold; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">WolfWorks: An Introduction to R</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Setup
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="./S00_background.html">Course Outline</a>
+    </li>
+    <li>
+      <a href="./S00_setup.html">Course Setup</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Lessons
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="./S01_R_and_RStudio.html">R and RStudio</a>
+    </li>
+    <li>
+      <a href="./S02_Objects_in_R.html">Objects in R</a>
+    </li>
+    <li>
+      <a href="./S03_Data_structures_in_R.html">Data structures in R</a>
+    </li>
+    <li>
+      <a href="./S04_Starting_with_data.html">Starting with data</a>
+    </li>
+    <li>
+      <a href="./S05_Intro_tidyverse.html">Intro to the tidyverse</a>
+    </li>
+    <li>
+      <a href="./S06_Data_visualisation_ggplot.html">Data visualisation with ggplot2</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="./contact.html">Contact</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/Charl-Hutchings/RIntro">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Lesson 2: Objects in R</h1>
+
+</div>
+
+
+<style type="text/css">
+
+body, td {
+   font-size: 18px;
+}
+code.r{
+  font-size: 14px;
+}
+pre {
+  font-size: 14px
+}
+</style>
+<p><em>This is the course handbook for WolfWorks: An introduction to R.</em></p>
+<hr />
+<p>Objectives:</p>
+<ol style="list-style-type: decimal">
+<li>Understand the key terms <em>object</em>, <em>variable</em>, <em>assign</em>, <em>call</em>, <em>function</em>, <em>argument</em>, and <em>options</em></li>
+<li>Know how to store and name objects within the RStudio Environment</li>
+</ol>
+<hr />
+<div id="assigning-values-to-objectsvariables" class="section level2">
+<h2>Assigning values to objects/variables</h2>
+<p>As we saw previously, we can execute code directly via the <strong>console</strong> (by pressing <code>Enter</code>) or indirectly via a <strong>script</strong> (by pressing <code>Control + Enter</code>). The output of our command will appear in the console. However, if we want to store a value or data structure, we have to <em>assign</em> it to an <em>object</em>. <br> <br></p>
+<p>Some more important definitions:</p>
+<ul>
+<li>An <em>object</em> is a data store within R - it contains one or more values and these can be stored in various structures e.g., data frames, matrices, vectors (more about these data structures later)</li>
+<li>What are known as <code>objects</code> in <code>R</code> are known as <code>variables</code> in some other programming languages. In certain scenarios the terms <em>object</em> and <em>variable</em> have very distinct meanings, but for the context of today’s workshop they are the same thing</li>
+<li>To store some data within an object, we must <em>assign</em> the data to our object. This is done using the assignment operator <code>&lt;-</code> <br></li>
+</ul>
+<p>For example, if I wish to save the value <code>55</code> into an object called <code>weight_kg</code>, I could use the assignment operator like so:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># assign a value of 55 to a variable called weight_kg</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>weight_kg <span class="ot">&lt;-</span> <span class="dv">55</span></span></code></pre></div>
+<p>When I execute this code I notice that there is no output in the console. That is because R does not print anything when assigning a value to an object. However, we do see that this object has appear in our Environment pane. If we want R to both assign the value of <code>55</code> to <code>weight_kg</code> and at the same time print its value in the console, we can add brackets around our assignment.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(weight_kg <span class="ot">&lt;-</span> <span class="dv">55</span>)</span></code></pre></div>
+<pre><code>## [1] 55</code></pre>
+<p>Now R has stored <code>weight</code> in its memory, we can use the object name to represent the value we have stored.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># print the value of weight</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>weight_kg</span></code></pre></div>
+<pre><code>## [1] 55</code></pre>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># use the value of weight for arithmetic</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>weight_kg <span class="sc">*</span> <span class="fl">2.2</span></span></code></pre></div>
+<pre><code>## [1] 121</code></pre>
+<p>As before, the output that appears in our console is the result of the arithmetic alongside a <code>[1]</code> to indicate that this is the first (and only) value of the output. Importantly, this has not altered the value of our <code>weight_kg</code> object because we did not assign the output of this code to the object <code>weight_kg</code>. If we want to save the value of <code>weight_kg * 2.2</code> then we need to assign it to an object.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="do">## assign the output of our arithmetic query to a new object</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>weight_lb <span class="ot">&lt;-</span> weight_kg <span class="sc">*</span> <span class="fl">2.2</span></span></code></pre></div>
+<p>Now I see both objects are present in my environment.</p>
+<p>If we were to assign a new value to <code>weight_kg</code>, this would overwrite the previous value. Let’s try it.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>weight_kg <span class="ot">&lt;-</span> <span class="dv">62</span></span></code></pre></div>
+<p><strong>Question:</strong> What are the values of <code>weight_kg</code> and <code>weight_lb</code> now. Does <code>weight_lg</code> = <code>weight_kg * 2.2</code>? <br> <br></p>
+<p><strong>Naming objects in R</strong></p>
+<p>Since we now know how to assign a value to an object using the <code>&lt;-</code> operator, it is worth taking a moment to consider how we should name these objects. There are some basic naming principles that you should adhere to in R:</p>
+<ol style="list-style-type: decimal">
+<li>Use meaningful names that relate to what is inside of the object - avoid meaningless names such as <code>a</code>, <code>b</code>, <code>c</code></li>
+<li>R will not allow names with spaces in - it is common practice to replace a space with <code>_</code></li>
+<li>R will not allow an object name which begins with a number - <code>2x</code> is not a valid name, but <code>x2</code> is</li>
+<li>Avoid names that are the same as function names e.g., <code>if</code>, <code>else</code>, <code>mean</code>, <code>data</code> and <code>c</code></li>
+<li>Avoid dots (<code>.</code>) as many function names contain dots for historical reasons</li>
+</ol>
+<p>You should also be aware that R is case-sensitive. This means that R does not consider <code>weight_kg</code> and <code>Weight_kg</code> to be the same thing. For more information about naming practices and writing neat code there are several R style guides e.g., the <a href="https://contributions.bioconductor.org/r-code.html#r-code">Bioconductor style guide</a> or the <a href="https://style.tidyverse.org">tidyverse guide</a>. <br> <br></p>
+<p><strong>Comments</strong></p>
+<p>When we are writing a script we want to be able to annotate the script with notes and explanations of what the code is doing. This helps both your future self and anyone else who should ready your script to understand what is going on.</p>
+<p>The comment character in R is <code>#</code>. Anything to the right of a <code>#</code> will be ignored by R. RStudio also helps us by changing the colour of our commented text so that we can see it easily.</p>
+<hr />
+</div>
+<div id="calling-functions" class="section level2">
+<h2>Calling functions</h2>
+<p>Functions are one of the key features of R. A <em>function</em> is a self-contained module of code that has been written to carry out a specific task. R has many functions that allow us to automate common tasks. For example, think about how many R users around the globe will at some point take the mean average of some data. Rather than each individual writing out the arithmetic for this, R has a convenient <code>mean</code> function that already contains all of the required code.</p>
+<p>Many functions are pre-defined in R and are already here and ready for use. For more specific analysis needs, thousands more functions can be installed and used by importing R <em>packages</em> (more on that later).</p>
+<p>A <em>function</em> typically requires one or more inputs called <em>arguments</em> and usually returns a value. Executing a function (i.e., running it) is referred to as <em>calling</em> the function.</p>
+<p>Let’s look at a simple example, the <code>round</code> function. This function takes a number and rounds it, as indicated by the name.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="at">x =</span> <span class="fl">3.1415926</span>)</span></code></pre></div>
+<pre><code>## [1] 3</code></pre>
+<p>Here, we have <em>called</em> the <code>round</code> <em>function</em> and passed it the argument <code>x = 3.1415926</code>. If we want to see what the argument <code>x</code> requires, we can use the single question mark help function that we saw previously.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>?round</span></code></pre></div>
+<p>This tells us that the argument <code>x</code> is a numeric vector i.e., the number that we wish to round. We can also see that there is another argument available for this function, the <code>digits</code> argument. We did not previously pass this argument because it is not an absolute requirement. Many functions have these optional arguments (called <em>options</em>) and if they are not specified they will take on a <em>default</em> value. Here, the default value for the <code>digits</code> argument is 0 (i.e., round to the nearest whole number). The default value can be overwritten by specifying this argument in our code.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="at">x =</span> <span class="fl">3.1415926</span>, <span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## [1] 3.14</code></pre>
+<p>In this example we have explicitly named the arguments <code>x =</code> and <code>digits =</code>. This is not always necessary in R, but it is useful when starting out. When we name the arguments, the order we provide them in does not matter because R can still tell what we are referring to. If, however, we provided our arguments without naming them, then we would have to be careful about their order.</p>
+<p>There is a default order in which R expects to receive arguments for a function. If we don’t provide explicit argument names, we have to stick to the default order so that R can tell which argument is which.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Pass arguments in the correct (default) order with names</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="at">x =</span> <span class="fl">3.1415926</span>, <span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## [1] 3.14</code></pre>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Pass arguments in the correct (default) order without names</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fl">3.1415926</span>, <span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## [1] 3.14</code></pre>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Pass arguments in alternative order with names</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="at">digits =</span> <span class="dv">2</span>, <span class="at">x =</span> <span class="fl">3.1415926</span>)</span></code></pre></div>
+<pre><code>## [1] 3.14</code></pre>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Pass arguments in alternative order without names</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="dv">2</span>, <span class="fl">3.1415926</span>)</span></code></pre></div>
+<pre><code>## [1] 2</code></pre>
+<p>This is particularly important as we begin to use more complex functions that require a larger number of arguments.</p>
+<p>Some useful math/stat functions in R:</p>
+<ul>
+<li><code>max()</code>: maximum value in a numeric vector</li>
+<li><code>min()</code>: minimum value in a numeric vector</li>
+<li><code>range()</code>: vector of min and max</li>
+<li><code>sum()</code>: sum of a vector</li>
+<li><code>mean()</code>: mean of a vector</li>
+<li><code>median()</code>: median of a vector</li>
+<li><code>var()</code>: variance of a vector</li>
+<li><code>sd()</code>: standard deviation of a vector</li>
+<li><code>sort()</code>: sorted version of a vector</li>
+<li><code>length()</code>: length of an object</li>
+<li><code>cor()</code>: correlation of x and y <br> <br></li>
+</ul>
+<p><strong>Challenge: Objects in R</strong> <br> Create two new objects called <code>mass</code> and <code>age</code> and assign the values of <code>122</code> and <code>47.5</code> to them, respectively. Now use these objects to calculate the value of a new object called <code>mass_index</code> (equal to mass divided by age).</p>
+<p>Now change the value of <code>mass</code> by multiplying it by two and change the value of <code>age</code> by minusing 20. What is the value of the <code>mass_index</code> now?</p>
+<details>
+<summary>
+Solution
+</summary>
+<p><br></p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>mass <span class="ot">&lt;-</span> <span class="dv">122</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>age <span class="ot">&lt;-</span> <span class="fl">47.5</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>mass_index <span class="ot">&lt;-</span> <span class="dv">122</span> <span class="sc">/</span> <span class="fl">47.5</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>mass <span class="ot">&lt;-</span> mass <span class="sc">*</span> <span class="dv">2</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>age <span class="ot">&lt;-</span> age <span class="sc">-</span> <span class="dv">20</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>mass_index</span></code></pre></div>
+<pre><code>## [1] 2.568421</code></pre>
+</details>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

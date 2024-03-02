@@ -1,0 +1,272 @@
+---
+title: "Lesson 2: Objects in R"
+output: 
+  html_document:
+    toc: FALSE
+---
+
+<style type="text/css">
+
+body, td {
+   font-size: 18px;
+}
+code.r{
+  font-size: 14px;
+}
+pre {
+  font-size: 14px
+}
+</style>
+
+*This is the course handbook for WolfWorks: An introduction to R.*
+
+***
+
+Objectives:
+
+1. Understand the key terms *object*, *variable*, *assign*, *call*, *function*, *argument*, and *options*
+2. Know how to store and name objects within the RStudio Environment
+
+
+***
+
+
+## Assigning values to objects/variables
+
+As we saw previously, we can execute code directly via the **console** 
+(by pressing `Enter`) or indirectly via a **script** (by pressing `Control + Enter`).
+The output of our command will appear in the console. However, if we want to 
+store a value or data structure, we have to *assign* it to an *object*.
+<br>
+<br>
+
+Some more important definitions: 
+
+* An *object* is a data store within R - it contains one or more values and these can be stored in various structures e.g., data frames, matrices, vectors (more about these data structures later)
+* What are known as `objects` in `R` are known as `variables` in some other programming languages. In certain scenarios the terms *object* and *variable* have very distinct meanings, but for the context of today's workshop they are the same thing
+* To store some data within an object, we must *assign* the data to our object. This is done using the assignment operator `<-`
+<br>
+
+For example, if I wish to save the value `55` into an object called `weight_kg`,
+I could use the assignment operator like so:
+
+
+```{r}
+# assign a value of 55 to a variable called weight_kg
+weight_kg <- 55
+```
+
+
+When I execute this code I notice that there is no output in the console. That 
+is because R does not print anything when assigning a value to an object. 
+However, we do see that this object has appear in our Environment pane. If we
+want R to both assign the value of `55` to `weight_kg` and at the same time print
+its value in the console, we can add brackets around our assignment. 
+
+
+```{r}
+(weight_kg <- 55)
+```
+
+
+Now R has stored `weight` in its memory, we can use the object name to 
+represent the value we have stored.
+
+
+```{r}
+# print the value of weight
+weight_kg
+
+# use the value of weight for arithmetic
+weight_kg * 2.2
+```
+
+
+As before, the output that appears in our console is the result of the arithmetic
+alongside a `[1]` to indicate that this is the first (and only) value of the output.
+Importantly, this has not altered the value of our `weight_kg` object because we
+did not assign the output of this code to the object `weight_kg`. If we want to 
+save the value of `weight_kg * 2.2` then we need to assign it to an object.
+
+
+```{r}
+## assign the output of our arithmetic query to a new object
+weight_lb <- weight_kg * 2.2
+```
+
+
+Now I see both objects are present in my environment. 
+
+If we were to assign a new value to `weight_kg`, this would overwrite the 
+previous value. Let's try it. 
+
+
+```{r}
+weight_kg <- 62
+```
+
+
+**Question:**
+What are the values of `weight_kg` and `weight_lb` now. Does `weight_lg` = 
+`weight_kg * 2.2`? 
+<br>
+<br>
+
+**Naming objects in R**
+
+Since we now know how to assign a value to an object using the `<-` operator, it
+is worth taking a moment to consider how we should name these objects. There are
+some basic naming principles that you should adhere to in R:
+
+1. Use meaningful names that relate to what is inside of the object - avoid meaningless names such as `a`, `b`, `c`
+2. R will not allow names with spaces in - it is common practice to replace a space with `_` 
+3. R will not allow an object name which begins with a number - `2x` is not a valid name, but `x2` is
+4. Avoid names that are the same as function names e.g., `if`, `else`, `mean`, `data` and `c` 
+5. Avoid dots (`.`) as many function names contain dots for historical reasons
+
+You should also be aware that R is case-sensitive. This means that R does not 
+consider `weight_kg` and `Weight_kg` to be the same thing. For more information
+about naming practices and writing neat code there are several R style guides 
+e.g., the [Bioconductor style guide](https://contributions.bioconductor.org/r-code.html#r-code)
+or the [tidyverse guide](https://style.tidyverse.org).
+<br>
+<br>
+
+**Comments**
+
+When we are writing a script we want to be able to annotate the script with 
+notes and explanations of what the code is doing. This helps both your future 
+self and anyone else who should ready your script to understand what is going
+on.
+
+The comment character in R is `#`. Anything to the right of a `#` will be 
+ignored by R. RStudio also helps us by changing the colour of our commented text
+so that we can see it easily.
+
+
+***
+
+
+## Calling functions 
+
+Functions are one of the key features of R. A *function* is a self-contained
+module of code that has been written to carry out a specific task. R has many 
+functions that allow us to automate common tasks. For example, think about how
+many R users around the globe will at some point take the mean average of some 
+data. Rather than each individual writing out the arithmetic for this, R has a
+convenient `mean` function that already contains all of the required code.
+
+Many functions are pre-defined in R and are already here and ready for use. For 
+more specific analysis needs, thousands more functions can be installed and used
+by importing R *packages* (more on that later).
+
+A *function* typically requires one or more inputs called *arguments* and usually
+returns a value. Executing a function (i.e., running it) is referred to as 
+*calling* the function.
+
+Let's look at a simple example, the `round` function. This function takes a
+number and rounds it, as indicated by the name.
+
+
+```{r}
+round(x = 3.1415926)
+```
+
+
+Here, we have *called* the `round` *function* and passed it the argument 
+`x = 3.1415926`. If we want to see what the argument `x` requires, we can use 
+the single question mark help function that we saw previously.
+
+
+```{r}
+?round
+```
+
+
+This tells us that the argument `x` is a numeric vector i.e., the number that 
+we wish to round. We can also see that there is another argument available for
+this function, the `digits` argument. We did not previously pass this argument
+because it is not an absolute requirement. Many functions have these optional
+arguments (called *options*) and if they are not specified they will take on a 
+*default* value. Here, the default value for the `digits` argument is 0 (i.e.,
+round to the nearest whole number). The default value can be overwritten by 
+specifying this argument in our code.
+
+
+```{r}
+round(x = 3.1415926, digits = 2)
+```
+
+
+In this example we have explicitly named the arguments `x =` and `digits =`. 
+This is not always necessary in R, but it is useful when starting out. When we
+name the arguments, the order we provide them in does not matter because R can
+still tell what we are referring to. If, however, we provided our arguments 
+without naming them, then we would have to be careful about their order.
+
+There is a default order in which R expects to receive arguments for a function.
+If we don't provide explicit argument names, we have to stick to the default 
+order so that R can tell which argument is which.
+
+
+```{r}
+# Pass arguments in the correct (default) order with names
+round(x = 3.1415926, digits = 2)
+
+# Pass arguments in the correct (default) order without names
+round(3.1415926, 2)
+
+# Pass arguments in alternative order with names
+round(digits = 2, x = 3.1415926)
+
+# Pass arguments in alternative order without names
+round(2, 3.1415926)
+```
+
+
+This is particularly important as we begin to use more complex functions that 
+require a larger number of arguments.
+
+
+Some useful math/stat functions in R: 
+
+* `max()`: maximum value in a numeric vector
+* `min()`: minimum value in a numeric vector
+* `range()`: vector of min and max
+* `sum()`: sum of a vector
+* `mean()`: mean of a vector
+* `median()`: median of a vector
+* `var()`: variance of a vector
+* `sd()`: standard deviation of a vector
+* `sort()`: sorted version of a vector
+* `length()`: length of an object
+* `cor()`: correlation of x and y
+<br>
+<br>
+
+**Challenge: Objects in R**
+<br>
+Create two new objects called `mass` and `age` and assign the values of `122`
+and `47.5` to them, respectively. Now use these objects to calculate the value 
+of a new object called `mass_index` (equal to mass divided by age).
+
+Now change the value of `mass` by multiplying it by two and change the value of
+`age` by minusing 20. What is the value of the `mass_index` now?
+
+<details>  
+<summary>Solution</summary> 
+<br>
+
+```{r}
+mass <- 122
+age <- 47.5
+
+mass_index <- 122 / 47.5
+
+mass <- mass * 2
+age <- age - 20
+
+mass_index
+```
+
+</details>

@@ -1,0 +1,193 @@
+---
+title: "Lesson 4: Starting with your own data"
+output: 
+  html_document:
+    toc: FALSE
+---
+
+<style type="text/css">
+
+body, td {
+   font-size: 18px;
+}
+code.r{
+  font-size: 14px;
+}
+pre {
+  font-size: 14px
+}
+</style>
+
+*This is the course handbook for WolfWorks: An introduction to R.*
+
+***
+
+Objectives: 
+
+1. Upload data from a `.csv` file into a `data.frame` in R
+2. Manipulate a `data.frame` by re-naming columns and rows and converting columns between data types
+3. Be aware of different approaches to dealing with missing data
+4. Export a `data.frame` from R into a `.csv` file
+
+
+***
+
+
+## The use-case data
+
+For the remainder of this workshop we will be looking at real-life data from 
+[Blackmore *et al*. (2017)](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5544260/), 
+*The effect of upper-respiratory infection on transcriptomic changes in the CNS*.
+In this study, mice were treated with either (i) Influenza A virus or (ii) control 
+saline solution. At 0, 4 and 8 days post-treatment, samples were taken from the
+cerebellum (brain) and spinal cord tissues and the gene expression in these
+tissues was measured.
+
+The dataset is stored as a `.csv` file. Each row holds information for a single
+RNA expression measurement and the columns include various attributes associated
+with this measurement. Examples include:
+
+```{r, echo = FALSE}
+tabl3 <- data.frame("Column" = c("gene", "sample", "expression", "organism",
+                                 "age", "sex", "infection", "strain", "time",
+                                 "tissue", "mouse"),
+                    "Description" = c("The name of the gene that was measured",
+                                      "The name of the sample that the gene expression was measured in",
+                                      "The quantitative value of the gene expression",
+                                      "The organism/species - here all data were from mice",
+                                      "The age of the mouse - here all mice were 8 weeks",
+                                      "The sex of the mouse",
+                                      "The infection state i.e., Influenze A or not infected (control)",
+                                      "The strain of mouse",
+                                      "The duration of infection (in days)",
+                                      "The tissue that gene expression was measured in - either cerebellum or spinal cord",
+                                      "The mouse unique identifier"))
+  
+  
+knitr::kable(tabl3, 
+             col.names = c("Column", "Description"),
+             caption = "Description of data stored in the first 11 columns of our use-case data")
+```
+
+
+***
+
+
+## Downloading and importing data 
+
+There are two ways in which you can download the data required for this workshop.
+Firstly, we can use the `download.file()` function and pass it two arguments -
+the `url` where the data is stored and the `destfile` where we want to save it
+on our local system. Remember, when giving a file path to `destfile`, this
+can be absolute or relative. If you're using a relative filepath, make sure you
+know where your working directory is (since this is where the path is relative
+to). 
+
+The second way to download this file would be to manually visit the `url` and
+save it into our desired file from there. Since we can do it all within R, let's
+do it the first way.
+
+
+```{r}
+## Download data file into desired local destination
+download.file(url = "https://github.com/carpentries-incubator/bioc-intro/raw/main/episodes/data/rnaseq.csv",
+              destfile = "raw_data/rnaseq_data.csv")
+```
+<br>
+
+Now that we have the file stored on our local system we can load the data into 
+R. To do this we use the `read.csv()` function and pass the relative path to 
+our file. Remember to assign the data to an object, here called `rna_data`.
+<br>
+
+* `read.csv()` reads data from a comma-separated (CSV) file into a data frame
+* `read.delim()` reads data from a delimited files (default is tab-delimited) into a data frame
+<br>
+
+The `read.csv2()` and `read.delim2()` functions are designed for countries that
+use "," as decimal places rather than separators. Here, the separators are 
+typically ";". 
+
+
+```{r}
+## Load data into R as a data frame
+rna_data <- read.csv(file = "raw_data/rnaseq_data.csv")
+```
+
+
+As we expect, R does not give us any output from an assignment, but we should 
+see that our data has now appeared in the RStudio environment.
+
+
+***
+
+
+## Checking our understanding
+
+To bring together everything covered in the workshop so far, please complete 
+the three challenges below. 
+
+Tips: 
+
+* Ask for help using the `?` or `??` notation
+* Be aware of missing data (NA values)
+* Remember the different properties of character vs. factor data types
+* Break each challenge down - think about what data you need and in what format
+<br>
+<br>
+
+**Challenge: Basic plotting**  
+Re-create this plot showing the expression of Ubfd1 at 8-days post-treatment in 
+male and female mice. Think about which data is displayed on the graph - this is
+the data you need from our data frame. Explore the use of the `plot()` function.
+
+
+```{r, echo = FALSE, fig.align = "center", out.width = "70%"}
+knitr::include_graphics("images/example_graph_challenge.png")
+```
+<br>
+<br>
+
+<details>  
+<summary>Solution</summary> 
+<br>
+
+```{r}
+plotting_data <- rna_data[rna_data$gene == "Ubfd1" & rna_data$time == 8, ] #Subset relevant data
+plotting_data$sex <- factor(plotting_data$sex, levels = c("Male", "Female")) #Convert sex to a factor and re-level
+
+plot(expression ~ sex, data = plotting_data, 
+     main = "Expression of Ubfd1 at 8-days post-treatment",
+     ylab = "Expression of Ubfd1",
+     xlab = "Sex",
+     col = c("lightgreen", "orange"))
+```
+
+</details>
+<br>
+
+**Challenge: Basic statistics**  
+Using the `rna_data` data set, test whether the `expression` of Fbxl22 is
+correlated with `time`. Explore the use of the `cor.test` function. 
+
+* What is the estimated correlation coefficient?
+* What is the p-value?
+* What is the correlation coefficient confidence interval?
+
+
+<details>  
+<summary>Solution</summary> 
+<br>
+
+```{r}
+statistics_data <- rna_data[rna_data$gene == "Fbxl22", ]  #Subset relevant data
+
+cor.test(x = statistics_data$expression, y = statistics_data$time)  #Carry out correlation test
+
+plot(expression ~ time, data = statistics_data,                     #Create plot to visually verify result
+     main = "Correlation between expression of Fbxl22 and time",
+     xlab = "Expresssion of Fbxl22", 
+     ylab = "Time post-treatment (days)")
+```
+
+</details>

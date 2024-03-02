@@ -1,0 +1,29 @@
+name: "RIntro"
+title: "WolfWorks: An Introduction to R"
+type: inverse
+left:
+  - text: "Setup"
+    menu:
+      - text: "Course Outline"
+        href: ./S00_background.html
+      - text: "Course Setup"
+        href: ./S00_setup.html
+  - text: "Lessons"
+    menu:
+       - text: "R and RStudio"
+         href: ./S01_R_and_RStudio.html
+       - text: "Objects in R"
+         href: ./S02_Objects_in_R.html
+       - text: "Data structures in R"
+         href: ./S03_Data_structures_in_R.html
+       - text: "Starting with data"
+         href: ./S04_Starting_with_data.html
+       - text: "Intro to the tidyverse"
+         href: ./S05_Intro_tidyverse.html
+       - text: "Data visualisation with ggplot2"
+         href: ./S06_Data_visualisation_ggplot.html
+  - text: "Contact"
+    href: ./contact.html
+right:
+  - icon: fa-github fa-lg
+    href: https://github.com/Charl-Hutchings/RIntro
