@@ -432,6 +432,16 @@ pre {
 <p>When you install a package R will also install all other packages on which the package depends, termed <code>package dependencies</code>. This is because many functions rely on the internal use of other functions to run correctly.</p>
 <p>Once a package has been installed we need to load it into the current RStudio session so that we can use it. To load a package we use the Base-R <code>library</code> function. We cannot use the functions within a package until it is both installed and loaded. Whilst the installation only needs to be done once (until updates), we have to load the package every time we start a new RStudio session (i.e., when we close RStudio and then re-open it). Let’s load the <code>tidyverse</code> package that we have installed.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;tidyverse&quot;</span>)</span></code></pre></div>
+<pre><code>## ── Attaching core tidyverse packages ──────────────────────────────────────────────── tidyverse 2.0.0 ──
+## ✔ dplyr     1.1.4     ✔ readr     2.1.4
+## ✔ forcats   1.0.0     ✔ stringr   1.5.1
+## ✔ ggplot2   3.4.4     ✔ tibble    3.2.1
+## ✔ lubridate 1.9.3     ✔ tidyr     1.3.0
+## ✔ purrr     1.0.2     
+## ── Conflicts ────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()
+## ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
 <hr />
 </div>
 <div id="introduction-to-the-tidyverse" class="section level2">
@@ -442,18 +452,18 @@ pre {
 <h4>The <code>tibble</code> structure vs. Base-R <code>data.frame</code></h4>
 <p>In the previous lesson we used the <code>data.frame</code> structure within Base-R to store our data. A <code>tibble</code> is essentially an improved version of a <code>data.frame</code> which is compatible with all packages and functions in the <code>tidyverse</code>.</p>
 <p>We can load our data directly into a <code>tibble</code> using the <code>read_csv</code> function (not the <code>read.csv</code> function which would give us a Base-R <code>data.frame</code>). Alternatively, if we already had a <code>data.frame</code> we could convert this into a <code>tibble</code> using <code>as_tibble()</code>.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Load data into R as a tibble</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>rna_tbl <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="at">file =</span> <span class="st">&quot;raw_data/rnaseq_data.csv&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Load data into R as a tibble</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>rna_tbl <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="at">file =</span> <span class="st">&quot;raw_data/rnaseq_data.csv&quot;</span>)</span></code></pre></div>
 <pre><code>## Rows: 32428 Columns: 19
-## ── Column specification ────────────────────────────────────────────────────────────────────────────────────────────────────
+## ── Column specification ────────────────────────────────────────────────────────────────────────────────
 ## Delimiter: &quot;,&quot;
-## chr (14): gene, sample, organism, sex, infection, strain, tissue, product, ensembl_gene_id, external_synonym, chromosome...
+## chr (14): gene, sample, organism, sex, infection, strain, tissue, product, ensembl_gene_id, external...
 ## dbl  (5): expression, age, time, mouse, ENTREZID
 ## 
 ## ℹ Use `spec()` to retrieve the full column specification for this data.
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Look at the structure of our tibble</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(rna_tbl)</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Look at the structure of our tibble</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(rna_tbl)</span></code></pre></div>
 <pre><code>## spc_tbl_ [32,428 × 19] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
 ##  $ gene                                 : chr [1:32428] &quot;Asl&quot; &quot;Apod&quot; &quot;Cyp2d22&quot; &quot;Klk6&quot; ...
 ##  $ sample                               : chr [1:32428] &quot;GSM2545336&quot; &quot;GSM2545336&quot; &quot;GSM2545336&quot; &quot;GSM2545336&quot; ...
@@ -511,14 +521,14 @@ pre {
 <h4>The pipe operator</h4>
 <p>One of the most influential additions that we gain by using the <code>tidyverse</code> is the pipe operator (<code>%&gt;%</code> or <code>|&gt;</code>) from the <code>magrittr</code> package (loaded as one of the <code>tidyverse</code>s packages).</p>
 <p>The function of a pipe is to pass the output of one function (on its left) directly as an input to another function (on its right). This reduces the need for difficult-to-read nested functions. For example, if I wanted to take the mean of all expression values in our data set and round this value to two significant figures:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="do">## In base-R using nested functions</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">signif</span>(<span class="fu">mean</span>(rna_tbl<span class="sc">$</span>expression, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="do">## In base-R using nested functions</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">signif</span>(<span class="fu">mean</span>(rna_tbl<span class="sc">$</span>expression, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div>
 <pre><code>## [1] 1900</code></pre>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="do">## In the tidyverse using the pipe operator</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>rna_tbl <span class="sc">%&gt;%</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(expression) <span class="sc">%&gt;%</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean</span>(<span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">signif</span>(<span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="do">## In the tidyverse using the pipe operator</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>rna_tbl <span class="sc">%&gt;%</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(expression) <span class="sc">%&gt;%</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean</span>(<span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">signif</span>(<span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div>
 <pre><code>## [1] 1900</code></pre>
 <p>It is much easier to see step-by-step what the code is doing when we use the pipe operator. We have also introduced a new function - <code>pull()</code>. This is a function that is commonly used in the <code>tidyverse</code> to extract a specific column as a vector. We will see more of this soon.</p>
 <hr />
@@ -539,8 +549,8 @@ pre {
 <h4>Selecting columns and filtering rows - <code>select()</code> and <code>filter()</code></h4>
 <p>To select only the columns that we’re interested in we can make use of the <code>select()</code> function. This can be particularly important when working with a <code>tibble</code> that is very large since we have already discovered that printing a <code>tibble</code> will only display the number of columns that fit on our screen - we want to make sure that these are the columns we are interested in.</p>
 <p>Using the <code>$</code> operator is quite convenient for selecting a single column and extracting the values as a vector. Selecting several columns using the <code>[]</code> subsetting operator is a bit more cumbersome.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Subsetting columns based on []</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>rna_tbl[, <span class="fu">c</span>(<span class="st">&quot;gene&quot;</span>, <span class="st">&quot;expression&quot;</span>, <span class="st">&quot;age&quot;</span>, <span class="st">&quot;sex&quot;</span>)]</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Subsetting columns based on []</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>rna_tbl[, <span class="fu">c</span>(<span class="st">&quot;gene&quot;</span>, <span class="st">&quot;expression&quot;</span>, <span class="st">&quot;age&quot;</span>, <span class="st">&quot;sex&quot;</span>)]</span></code></pre></div>
 <pre><code>## # A tibble: 32,428 × 4
 ##    gene    expression   age sex   
 ##    &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; 
@@ -555,9 +565,9 @@ pre {
 ##  9 Plp1         43217     8 Female
 ## 10 Gnb4          1071     8 Female
 ## # ℹ 32,418 more rows</code></pre>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Subsetting columns using select()</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>rna_tbl <span class="sc">%&gt;%</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(gene, expression, age, sex)</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Subsetting columns using select()</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>rna_tbl <span class="sc">%&gt;%</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(gene, expression, age, sex)</span></code></pre></div>
 <pre><code>## # A tibble: 32,428 × 4
 ##    gene    expression   age sex   
 ##    &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; 
@@ -573,40 +583,40 @@ pre {
 ## 10 Gnb4          1071     8 Female
 ## # ℹ 32,418 more rows</code></pre>
 <p>We can also use the “-” sign to select all columns except for those that we are not interested in.</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>rna_tbl <span class="sc">%&gt;%</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>gene, <span class="sc">-</span>expression)</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>rna_tbl <span class="sc">%&gt;%</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>gene, <span class="sc">-</span>expression)</span></code></pre></div>
 <p><br></p>
 <p><strong>Question:</strong> Take a look at the above code. What else differs when referring to columns in the <code>tidyverse</code>?</p>
 <p>Another thing that we previously used the <code>[]</code> for was conditional subsetting of rows. Again, the <code>dplyr</code> package contains a convenient and tidy function for doing this - <code>filter()</code>.</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Conditionally subsetting rows based on []</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>rna_tbl[rna_tbl<span class="sc">$</span>gene <span class="sc">==</span> <span class="st">&quot;Exd2&quot;</span>, ]</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Conditionally subsetting rows using filter()</span></span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>rna_tbl <span class="sc">%&gt;%</span></span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(gene <span class="sc">==</span> <span class="st">&quot;Exd2&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Conditionally subsetting rows based on []</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>rna_tbl[rna_tbl<span class="sc">$</span>gene <span class="sc">==</span> <span class="st">&quot;Exd2&quot;</span>, ]</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Conditionally subsetting rows using filter()</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>rna_tbl <span class="sc">%&gt;%</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(gene <span class="sc">==</span> <span class="st">&quot;Exd2&quot;</span>)</span></code></pre></div>
 <p>The most convenient thing about using the <code>select()</code> and <code>filter()</code> functions is that their output (the subsetted data) can be piped straight into another function. Using the base-R <code>[]</code> subsetting we would either have to assign the subsetted data to a new object and then start a new command with this object, or create a difficult-to-read nested command. <br></p>
 <p><strong>Question:</strong> If I wanted to use both <code>select()</code> and <code>filter()</code> to get a subset of rows and columns, which order would be the best to do this in? <br> <br></p>
 <p><strong>What is the difference between <code>pull()</code> and <code>select()</code></strong></p>
 <p>The <code>pull()</code> function returns a single column as a vector; the <code>select()</code> function returns one or more columns as a data frame. This means that we can pipe the output of <code>pull()</code> straight into a function expecting numbers.</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Using pull to return a numeric vector</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>rna_tbl <span class="sc">%&gt;%</span></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(expression) <span class="sc">%&gt;%</span></span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">median</span>(<span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Using pull to return a numeric vector</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>rna_tbl <span class="sc">%&gt;%</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(expression) <span class="sc">%&gt;%</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">median</span>(<span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 <pre><code>## [1] 547</code></pre>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Using select does not return a numeric vector </span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>rna_tbl <span class="sc">%&gt;%</span></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(expression) <span class="sc">%&gt;%</span></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">median</span>(<span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Using select does not return a numeric vector </span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>rna_tbl <span class="sc">%&gt;%</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(expression) <span class="sc">%&gt;%</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">median</span>(<span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 <p><br> <br></p>
 </div>
 <div id="creating-new-columns-with-mutate" class="section level4">
 <h4>Creating new columns with <code>mutate()</code></h4>
 <p>It is very common to want to modify a column or create a new column based on existing columns. For example, we might want to convert units (multiply all values in a column by a conversion factor) or find the ratio between two columns. For this we can use the <code>mutate()</code> function.</p>
 <p>Let’s create a new column in our data which stores time in hours rather than days.</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Use mutate() to create new columns</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>rna_tbl <span class="sc">%&gt;%</span></span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">time_hrs =</span> time <span class="sc">*</span> <span class="dv">24</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(time, time_hrs)</span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Use mutate() to create new columns</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>rna_tbl <span class="sc">%&gt;%</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">time_hrs =</span> time <span class="sc">*</span> <span class="dv">24</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(time, time_hrs)</span></code></pre></div>
 <pre><code>## # A tibble: 32,428 × 2
 ##     time time_hrs
 ##    &lt;dbl&gt;    &lt;dbl&gt;
@@ -622,11 +632,11 @@ pre {
 ## 10     8      192
 ## # ℹ 32,418 more rows</code></pre>
 <p>When the <code>mutate()</code> function is executed, each new column is generated one-by-one. This means that we can actually create a second column based on our new column, all within a single command.</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Use mutate to create new columns</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>rna_tbl <span class="sc">%&gt;%</span></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">time_hrs =</span> time <span class="sc">*</span> <span class="dv">24</span>, </span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">time_mins =</span> time_hrs <span class="sc">*</span> <span class="dv">60</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(time, time_hrs, time_mins)</span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Use mutate to create new columns</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>rna_tbl <span class="sc">%&gt;%</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">time_hrs =</span> time <span class="sc">*</span> <span class="dv">24</span>, </span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">time_mins =</span> time_hrs <span class="sc">*</span> <span class="dv">60</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(time, time_hrs, time_mins)</span></code></pre></div>
 <pre><code>## # A tibble: 32,428 × 3
 ##     time time_hrs time_mins
 ##    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
@@ -646,50 +656,50 @@ pre {
 <div id="split-apply-combine-data-analysis-using-group_by-and-summarise" class="section level4">
 <h4>Split-apply-combine data analysis using <code>group_by()</code> and <code>summarise()</code></h4>
 <p>Most data contains information about groups, and these are often defined by <code>factors</code>. For example, in our data we have males and females, time points 0, 4 and 8 days and all of our genes. In some cases we may want to do analysis on a per-group basis. Hence, we <strong>split</strong> the data into groups, <strong>apply</strong> some analysis to each group, and then <strong>combine</strong> the results. This process is made easy by the <code>group_by()</code> function.</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>rna_tbl <span class="sc">%&gt;%</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(sex) </span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>rna_tbl <span class="sc">%&gt;%</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(sex) </span></code></pre></div>
 <pre><code>## # A tibble: 32,428 × 19
 ## # Groups:   sex [2]
-##    gene    sample     expression organism     age sex   infection strain  time tissue mouse ENTREZID product ensembl_gene_id
-##    &lt;chr&gt;   &lt;chr&gt;           &lt;dbl&gt; &lt;chr&gt;      &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;          
-##  1 Asl     GSM2545336       1170 Mus muscu…     8 Fema… Influenz… C57BL…     8 Cereb…    14   109900 argini… ENSMUSG0000002…
-##  2 Apod    GSM2545336      36194 Mus muscu…     8 Fema… Influenz… C57BL…     8 Cereb…    14    11815 apolip… ENSMUSG0000002…
-##  3 Cyp2d22 GSM2545336       4060 Mus muscu…     8 Fema… Influenz… C57BL…     8 Cereb…    14    56448 cytoch… ENSMUSG0000006…
-##  4 Klk6    GSM2545336        287 Mus muscu…     8 Fema… Influenz… C57BL…     8 Cereb…    14    19144 kallik… ENSMUSG0000005…
-##  5 Fcrls   GSM2545336         85 Mus muscu…     8 Fema… Influenz… C57BL…     8 Cereb…    14    80891 Fc rec… ENSMUSG0000001…
-##  6 Slc2a4  GSM2545336        782 Mus muscu…     8 Fema… Influenz… C57BL…     8 Cereb…    14    20528 solute… ENSMUSG0000001…
-##  7 Exd2    GSM2545336       1619 Mus muscu…     8 Fema… Influenz… C57BL…     8 Cereb…    14    97827 exonuc… ENSMUSG0000003…
-##  8 Gjc2    GSM2545336        288 Mus muscu…     8 Fema… Influenz… C57BL…     8 Cereb…    14   118454 gap ju… ENSMUSG0000004…
-##  9 Plp1    GSM2545336      43217 Mus muscu…     8 Fema… Influenz… C57BL…     8 Cereb…    14    18823 proteo… ENSMUSG0000003…
-## 10 Gnb4    GSM2545336       1071 Mus muscu…     8 Fema… Influenz… C57BL…     8 Cereb…    14    14696 guanin… ENSMUSG0000002…
+##    gene    sample   expression organism   age sex   infection strain  time tissue mouse ENTREZID product
+##    &lt;chr&gt;   &lt;chr&gt;         &lt;dbl&gt; &lt;chr&gt;    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;  
+##  1 Asl     GSM2545…       1170 Mus mus…     8 Fema… Influenz… C57BL…     8 Cereb…    14   109900 argini…
+##  2 Apod    GSM2545…      36194 Mus mus…     8 Fema… Influenz… C57BL…     8 Cereb…    14    11815 apolip…
+##  3 Cyp2d22 GSM2545…       4060 Mus mus…     8 Fema… Influenz… C57BL…     8 Cereb…    14    56448 cytoch…
+##  4 Klk6    GSM2545…        287 Mus mus…     8 Fema… Influenz… C57BL…     8 Cereb…    14    19144 kallik…
+##  5 Fcrls   GSM2545…         85 Mus mus…     8 Fema… Influenz… C57BL…     8 Cereb…    14    80891 Fc rec…
+##  6 Slc2a4  GSM2545…        782 Mus mus…     8 Fema… Influenz… C57BL…     8 Cereb…    14    20528 solute…
+##  7 Exd2    GSM2545…       1619 Mus mus…     8 Fema… Influenz… C57BL…     8 Cereb…    14    97827 exonuc…
+##  8 Gjc2    GSM2545…        288 Mus mus…     8 Fema… Influenz… C57BL…     8 Cereb…    14   118454 gap ju…
+##  9 Plp1    GSM2545…      43217 Mus mus…     8 Fema… Influenz… C57BL…     8 Cereb…    14    18823 proteo…
+## 10 Gnb4    GSM2545…       1071 Mus mus…     8 Fema… Influenz… C57BL…     8 Cereb…    14    14696 guanin…
 ## # ℹ 32,418 more rows
-## # ℹ 5 more variables: external_synonym &lt;chr&gt;, chromosome_name &lt;chr&gt;, gene_biotype &lt;chr&gt;, phenotype_description &lt;chr&gt;,
-## #   hsapiens_homolog_associated_gene_name &lt;chr&gt;</code></pre>
+## # ℹ 6 more variables: ensembl_gene_id &lt;chr&gt;, external_synonym &lt;chr&gt;, chromosome_name &lt;chr&gt;,
+## #   gene_biotype &lt;chr&gt;, phenotype_description &lt;chr&gt;, hsapiens_homolog_associated_gene_name &lt;chr&gt;</code></pre>
 <p>We can see at the top of our tibble that we have two groups based on the factor <code>sex</code>. We could similarly group by time point.</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>rna_tbl <span class="sc">%&gt;%</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(time)</span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>rna_tbl <span class="sc">%&gt;%</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(time)</span></code></pre></div>
 <pre><code>## # A tibble: 32,428 × 19
 ## # Groups:   time [3]
-##    gene    sample     expression organism     age sex   infection strain  time tissue mouse ENTREZID product ensembl_gene_id
-##    &lt;chr&gt;   &lt;chr&gt;           &lt;dbl&gt; &lt;chr&gt;      &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;          
-##  1 Asl     GSM2545336       1170 Mus muscu…     8 Fema… Influenz… C57BL…     8 Cereb…    14   109900 argini… ENSMUSG0000002…
-##  2 Apod    GSM2545336      36194 Mus muscu…     8 Fema… Influenz… C57BL…     8 Cereb…    14    11815 apolip… ENSMUSG0000002…
-##  3 Cyp2d22 GSM2545336       4060 Mus muscu…     8 Fema… Influenz… C57BL…     8 Cereb…    14    56448 cytoch… ENSMUSG0000006…
-##  4 Klk6    GSM2545336        287 Mus muscu…     8 Fema… Influenz… C57BL…     8 Cereb…    14    19144 kallik… ENSMUSG0000005…
-##  5 Fcrls   GSM2545336         85 Mus muscu…     8 Fema… Influenz… C57BL…     8 Cereb…    14    80891 Fc rec… ENSMUSG0000001…
-##  6 Slc2a4  GSM2545336        782 Mus muscu…     8 Fema… Influenz… C57BL…     8 Cereb…    14    20528 solute… ENSMUSG0000001…
-##  7 Exd2    GSM2545336       1619 Mus muscu…     8 Fema… Influenz… C57BL…     8 Cereb…    14    97827 exonuc… ENSMUSG0000003…
-##  8 Gjc2    GSM2545336        288 Mus muscu…     8 Fema… Influenz… C57BL…     8 Cereb…    14   118454 gap ju… ENSMUSG0000004…
-##  9 Plp1    GSM2545336      43217 Mus muscu…     8 Fema… Influenz… C57BL…     8 Cereb…    14    18823 proteo… ENSMUSG0000003…
-## 10 Gnb4    GSM2545336       1071 Mus muscu…     8 Fema… Influenz… C57BL…     8 Cereb…    14    14696 guanin… ENSMUSG0000002…
+##    gene    sample   expression organism   age sex   infection strain  time tissue mouse ENTREZID product
+##    &lt;chr&gt;   &lt;chr&gt;         &lt;dbl&gt; &lt;chr&gt;    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;  
+##  1 Asl     GSM2545…       1170 Mus mus…     8 Fema… Influenz… C57BL…     8 Cereb…    14   109900 argini…
+##  2 Apod    GSM2545…      36194 Mus mus…     8 Fema… Influenz… C57BL…     8 Cereb…    14    11815 apolip…
+##  3 Cyp2d22 GSM2545…       4060 Mus mus…     8 Fema… Influenz… C57BL…     8 Cereb…    14    56448 cytoch…
+##  4 Klk6    GSM2545…        287 Mus mus…     8 Fema… Influenz… C57BL…     8 Cereb…    14    19144 kallik…
+##  5 Fcrls   GSM2545…         85 Mus mus…     8 Fema… Influenz… C57BL…     8 Cereb…    14    80891 Fc rec…
+##  6 Slc2a4  GSM2545…        782 Mus mus…     8 Fema… Influenz… C57BL…     8 Cereb…    14    20528 solute…
+##  7 Exd2    GSM2545…       1619 Mus mus…     8 Fema… Influenz… C57BL…     8 Cereb…    14    97827 exonuc…
+##  8 Gjc2    GSM2545…        288 Mus mus…     8 Fema… Influenz… C57BL…     8 Cereb…    14   118454 gap ju…
+##  9 Plp1    GSM2545…      43217 Mus mus…     8 Fema… Influenz… C57BL…     8 Cereb…    14    18823 proteo…
+## 10 Gnb4    GSM2545…       1071 Mus mus…     8 Fema… Influenz… C57BL…     8 Cereb…    14    14696 guanin…
 ## # ℹ 32,418 more rows
-## # ℹ 5 more variables: external_synonym &lt;chr&gt;, chromosome_name &lt;chr&gt;, gene_biotype &lt;chr&gt;, phenotype_description &lt;chr&gt;,
-## #   hsapiens_homolog_associated_gene_name &lt;chr&gt;</code></pre>
+## # ℹ 6 more variables: ensembl_gene_id &lt;chr&gt;, external_synonym &lt;chr&gt;, chromosome_name &lt;chr&gt;,
+## #   gene_biotype &lt;chr&gt;, phenotype_description &lt;chr&gt;, hsapiens_homolog_associated_gene_name &lt;chr&gt;</code></pre>
 <p>Now we have three groups based on the <code>time</code> column.</p>
 <p>Once we have grouped our data, subsequent operations will be carried out on a per-group basis. This is facilitated by the <code>summarise()</code> function. Let’s try to find the mean expression across all genes at each time point.</p>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>rna_tbl <span class="sc">%&gt;%</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(time) <span class="sc">%&gt;%</span></span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_expression =</span> <span class="fu">mean</span>(expression, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>rna_tbl <span class="sc">%&gt;%</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(time) <span class="sc">%&gt;%</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_expression =</span> <span class="fu">mean</span>(expression, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code></pre></div>
 <pre><code>## # A tibble: 3 × 2
 ##    time mean_expression
 ##   &lt;dbl&gt;           &lt;dbl&gt;
@@ -697,9 +707,9 @@ pre {
 ## 2     4           1872.
 ## 3     8           1820.</code></pre>
 <p>We can also group by more than one factor at once. For example, if we wanted the mean expression value for males and females at each timepoint.</p>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>rna_tbl <span class="sc">%&gt;%</span> </span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(sex, time) <span class="sc">%&gt;%</span></span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_expression =</span> <span class="fu">mean</span>(expression, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>rna_tbl <span class="sc">%&gt;%</span> </span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(sex, time) <span class="sc">%&gt;%</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_expression =</span> <span class="fu">mean</span>(expression, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code></pre></div>
 <pre><code>## `summarise()` has grouped output by &#39;sex&#39;. You can override using the `.groups` argument.</code></pre>
 <pre><code>## # A tibble: 6 × 3
 ## # Groups:   sex [2]
@@ -712,10 +722,10 @@ pre {
 ## 5 Male       4           1852.
 ## 6 Male       8           1712.</code></pre>
 <p>Similarly, once the data is grouped, we can also summarise several variables at the same time.</p>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>rna_tbl <span class="sc">%&gt;%</span></span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(sex, time) <span class="sc">%&gt;%</span></span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_expression =</span> <span class="fu">mean</span>(expression, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">med_expression =</span> <span class="fu">median</span>(expression, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>rna_tbl <span class="sc">%&gt;%</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(sex, time) <span class="sc">%&gt;%</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_expression =</span> <span class="fu">mean</span>(expression, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">med_expression =</span> <span class="fu">median</span>(expression, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code></pre></div>
 <pre><code>## `summarise()` has grouped output by &#39;sex&#39;. You can override using the `.groups` argument.</code></pre>
 <pre><code>## # A tibble: 6 × 4
 ## # Groups:   sex [2]
@@ -740,9 +750,9 @@ pre {
 Solution
 </summary>
 <p><br></p>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>rna_tbl <span class="sc">%&gt;%</span></span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(gene_biotype) <span class="sc">%&gt;%</span></span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">number =</span> <span class="fu">length</span>(time))</span></code></pre></div>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>rna_tbl <span class="sc">%&gt;%</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(gene_biotype) <span class="sc">%&gt;%</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">number =</span> <span class="fu">length</span>(time))</span></code></pre></div>
 <pre><code>## # A tibble: 13 × 2
 ##    gene_biotype                       number
 ##    &lt;chr&gt;                               &lt;int&gt;
@@ -759,9 +769,9 @@ Solution
 ## 11 transcribed_unitary_pseudogene         22
 ## 12 transcribed_unprocessed_pseudogene     22
 ## 13 unprocessed_pseudogene                 44</code></pre>
-<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Can be done easily with count()</span></span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>rna_tbl <span class="sc">%&gt;%</span></span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(gene_biotype)</span></code></pre></div>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Can be done easily with count()</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>rna_tbl <span class="sc">%&gt;%</span></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(gene_biotype)</span></code></pre></div>
 <pre><code>## # A tibble: 13 × 2
 ##    gene_biotype                           n
 ##    &lt;chr&gt;                              &lt;int&gt;
@@ -778,10 +788,10 @@ Solution
 ## 11 transcribed_unitary_pseudogene        22
 ## 12 transcribed_unprocessed_pseudogene    22
 ## 13 unprocessed_pseudogene                44</code></pre>
-<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>rna_tbl <span class="sc">%&gt;%</span></span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(gene_biotype <span class="sc">==</span> <span class="st">&quot;lncRNA&quot;</span> <span class="sc">|</span> gene_biotype <span class="sc">==</span> <span class="st">&quot;miRNA&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(sex, gene_biotype) <span class="sc">%&gt;%</span></span>
-<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_exp =</span> <span class="fu">mean</span>(expression, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>rna_tbl <span class="sc">%&gt;%</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(gene_biotype <span class="sc">==</span> <span class="st">&quot;lncRNA&quot;</span> <span class="sc">|</span> gene_biotype <span class="sc">==</span> <span class="st">&quot;miRNA&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(sex, gene_biotype) <span class="sc">%&gt;%</span></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_exp =</span> <span class="fu">mean</span>(expression, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code></pre></div>
 <pre><code>## `summarise()` has grouped output by &#39;sex&#39;. You can override using the `.groups` argument.</code></pre>
 <pre><code>## # A tibble: 4 × 3
 ## # Groups:   sex [2]
@@ -791,11 +801,11 @@ Solution
 ## 2 Female miRNA            9.02
 ## 3 Male   lncRNA         190.  
 ## 4 Male   miRNA           11.4</code></pre>
-<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>rna_tbl <span class="sc">%&gt;%</span></span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(phenotype_description <span class="sc">==</span> <span class="st">&quot;abnormal DNA methylation&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(gene, time) <span class="sc">%&gt;%</span></span>
-<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_exp =</span> <span class="fu">mean</span>(expression, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">log_mean_exp =</span> <span class="fu">log</span>(mean_exp))</span></code></pre></div>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>rna_tbl <span class="sc">%&gt;%</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(phenotype_description <span class="sc">==</span> <span class="st">&quot;abnormal DNA methylation&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(gene, time) <span class="sc">%&gt;%</span></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_exp =</span> <span class="fu">mean</span>(expression, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">log_mean_exp =</span> <span class="fu">log</span>(mean_exp))</span></code></pre></div>
 <pre><code>## `summarise()` has grouped output by &#39;gene&#39;. You can override using the `.groups` argument.</code></pre>
 <pre><code>## # A tibble: 6 × 4
 ## # Groups:   gene [2]
